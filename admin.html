@@ -230,6 +230,35 @@
                 <button type="submit" id="submitWorkBtn" class="bg-secondary text-on-secondary px-4 py-2 rounded hover:opacity-90">Save Work</button>
             </div>
         </form>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="editWorkModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100] p-4">
+    <div class="bg-surface p-8 rounded border border-outline-variant shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        <h2 class="font-headline-sm mb-6 text-secondary">Edit Work</h2>
+        <form id="editWorkForm" class="flex flex-col gap-4">
+            <input type="hidden" id="ew_id">
+            <div class="flex flex-col gap-4">
+                <input type="text" id="ew_title_en" placeholder="Title" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="ew_desc_en" placeholder="Description" required class="p-2 border rounded border-outline-variant">
+            </div>
+            <div class="flex items-center gap-4">
+                <select id="ew_status" class="p-2 border rounded border-outline-variant flex-grow">
+                    <option value="Published">Published</option>
+                    <option value="Draft">Draft</option>
+                </select>
+                <div class="flex items-center gap-2 whitespace-nowrap">
+                    <input type="checkbox" id="ew_pinned" class="rounded border-outline-variant text-secondary">
+                    <label for="ew_pinned" class="font-label-md text-on-surface">Pin Work</label>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-4">
+                <button type="button" onclick="document.getElementById('editWorkModal').classList.add('hidden')" class="px-4 py-2 rounded text-on-surface-variant border border-outline-variant hover:bg-surface-container-low">Cancel</button>
+                <button type="submit" id="submitEditWorkBtn" class="bg-secondary text-on-secondary px-4 py-2 rounded hover:opacity-90">Save Changes</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -379,7 +408,7 @@
                         <span class="${statusClass} px-3 py-1 rounded-full text-[12px] font-semibold">${p.status}</span>
                         ${p.soldOut ? '<span class="bg-error text-on-error px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest">Sold Out</span>' : ''}
                     </div>
-                    <div class="text-center font-body-sm text-on-surface-variant hidden md:block">${p.date_added || 'Unknown'}</div>
+                    <div class="text-center font-body-sm text-on-surface-variant block">${p.date_added || 'Unknown'}</div>
                     <div class="flex justify-end gap-2">
                         <button class="p-2 bg-surface-container text-primary rounded hover:opacity-80 edit-btn" data-id="${p.id}"><span class="material-symbols-outlined text-[20px]">edit</span></button>
                         <button class="p-2 bg-surface-container text-error rounded hover:opacity-80 delete-btn" data-id="${p.id}"><span class="material-symbols-outlined text-[20px]">delete</span></button>
@@ -507,8 +536,9 @@
                     <div class="flex flex-col md:items-center gap-1">
                         <span class="${statusClass} px-3 py-1 rounded-full text-[12px] font-semibold">${w.status}</span>
                     </div>
-                    <div class="text-center font-body-sm text-on-surface-variant hidden md:block">${w.date_added || 'Unknown'}</div>
+                    <div class="text-center font-body-sm text-on-surface-variant block">${w.date_added || 'Unknown'}</div>
                     <div class="flex justify-end gap-2">
+                        <button class="p-2 bg-surface-container text-primary rounded hover:opacity-80 edit-work-btn" data-id="${w.id}"><span class="material-symbols-outlined text-[20px]">edit</span></button>
                         <button class="p-2 bg-surface-container text-error rounded hover:opacity-80 delete-work-btn" data-id="${w.id}"><span class="material-symbols-outlined text-[20px]">delete</span></button>
                     </div>
                 </div>
@@ -523,6 +553,20 @@
                     await deleteDoc(doc(db, "works", btn.getAttribute('data-id')));
                     fetchWorks();
                 }
+            });
+        });
+
+        // Edit Work Modal
+        document.querySelectorAll('.edit-work-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                const work = window.allWorks.find(w => w.id === id);
+                document.getElementById('ew_id').value = id;
+                document.getElementById('ew_title_en').value = work.title_en || '';
+                document.getElementById('ew_desc_en').value = work.desc_en || '';
+                document.getElementById('ew_status').value = work.status;
+                document.getElementById('ew_pinned').checked = work.pinned === true;
+                document.getElementById('editWorkModal').classList.remove('hidden');
             });
         });
     }
@@ -550,6 +594,21 @@
             fetchWorks();
         } catch (error) { alert("Error adding work"); } 
         finally { btn.disabled = false; document.getElementById('workUploadStatus').classList.add('hidden'); }
+    });
+
+    document.getElementById('editWorkForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('ew_id').value;
+        const payload = {
+            title_en: document.getElementById('ew_title_en').value,
+            desc_en: document.getElementById('ew_desc_en').value,
+            status: document.getElementById('ew_status').value,
+            pinned: document.getElementById('ew_pinned').checked
+        };
+        await updateDoc(doc(db, "works", id), payload);
+        document.getElementById('editWorkModal').classList.add('hidden');
+        document.getElementById('editWorkForm').reset();
+        fetchWorks();
     });
 
     window.addEventListener('languageChanged', () => {
