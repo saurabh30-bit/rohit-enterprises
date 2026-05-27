@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Panel | Rohit Enterprises</title>
+<!-- Tailwind CSS -->
+<link rel="stylesheet" href="/output.css">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #F8FAFC;
+        }
+</style>
+</head>
+<body class="font-body-md text-body-md text-on-surface antialiased relative"><div id="authLoading" class="flex flex-col items-center justify-center min-h-screen">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+    <p class="text-lg font-headline-md text-on-surface-variant">Verifying Access...</p>
+</div>
+<div id="adminContent" class="hidden">
+<header class="w-full top-0 sticky bg-surface dark:bg-on-background border-b border-outline-variant dark:border-outline z-50">
+<div class="flex justify-between items-center h-16 px-margin-desktop max-w-container-max mx-auto">
+<a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+<img src="/logo.png" alt="R Logo" class="w-9 h-9 rounded-full object-cover shadow-sm"/>
+<span class="text-headline-sm font-bold text-on-background dark:text-surface" style="font-family: 'Playfair Display', serif;" data-i18n="Rohit Enterprises">Rohit Enterprises</span>
+</a>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="font-body-md text-body-md text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 cursor-pointer duration-200" href="/admin" data-i18n="Admin Access">Admin Access</a>
+</nav>
+<div class="flex items-center space-x-4">
+<a href="/" class="bg-primary text-on-primary px-6 py-2 rounded font-label-md text-label-md hover:opacity-90 transition-all cursor-pointer" data-i18n="View Site">View Site</a>
+<button id="logoutBtn" class="border border-outline-variant text-on-surface-variant px-4 py-2 rounded font-label-md text-label-md hover:bg-surface transition-all cursor-pointer" data-i18n="Logout">Logout</button>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-desktop py-12">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+<div>
+<h1 class="font-headline-md text-headline-md text-on-surface mb-2" data-i18n="Product Management">Management</h1>
+<p class="font-body-md text-body-md text-on-surface-variant" data-i18n="Manage and monitor your enterprise product catalog.">Manage and monitor your enterprise data.</p>
+</div>
+<div class="flex gap-2">
+    <button id="addBtn" class="flex items-center gap-2 bg-on-background text-surface px-4 py-2 rounded hover:opacity-90 transition-all shadow-sm">
+        <span class="material-symbols-outlined">add</span>
+        <span class="font-label-md text-label-md" data-i18n="Upload New Product">Upload New Product</span>
+    </button>
+    <button id="addWorkBtn" class="flex items-center gap-2 bg-on-background text-surface px-4 py-2 rounded hover:opacity-90 transition-all shadow-sm hidden">
+        <span class="material-symbols-outlined">add</span>
+        <span class="font-label-md text-label-md" data-i18n="Upload New Work">Upload New Work</span>
+    </button>
+</div>
+</div>
+
+<div class="flex gap-6 mb-8 border-b border-outline-variant">
+   <button id="tabProducts" class="pb-2 border-b-2 border-primary text-primary font-bold transition-all text-lg" data-i18n="Products">Products</button>
+   <button id="tabWorks" class="pb-2 text-on-surface-variant font-bold transition-all text-lg hover:text-primary" data-i18n="Work">Work</button>
+</div>
+
+<!-- PRODUCTS SECTION -->
+<div id="sectionProducts">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-12">
+        <div class="bg-surface p-8 border border-outline-variant rounded hover:shadow-md transition-all duration-300">
+            <div class="flex justify-between items-start mb-4">
+                <span class="material-symbols-outlined text-primary text-3xl">inventory_2</span>
+                <span class="text-on-error-container bg-error-container px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider" data-i18n="All">All</span>
+            </div>
+            <p class="font-label-md text-label-md text-on-surface-variant mb-1" data-i18n="All Products">All Products</p>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface" id="totalCount">Loading...</h3>
+        </div>
+        <div class="bg-surface p-8 border border-outline-variant rounded hover:shadow-md transition-all duration-300">
+            <div class="flex justify-between items-start mb-4">
+                <span class="material-symbols-outlined text-outline text-3xl">edit_document</span>
+                <span class="text-on-surface-variant bg-surface-container-highest px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider" data-i18n="Draft">Draft</span>
+            </div>
+            <p class="font-label-md text-label-md text-on-surface-variant mb-1" data-i18n="Draft Products">Draft Products</p>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface" id="draftCount">Loading...</h3>
+        </div>
+        <div class="bg-surface p-8 border border-outline-variant rounded hover:shadow-md transition-all duration-300">
+            <div class="flex justify-between items-start mb-4">
+                <span class="material-symbols-outlined text-error text-3xl">remove_shopping_cart</span>
+                <span class="text-on-error bg-error px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider" data-i18n="Sold Out">Sold Out</span>
+            </div>
+            <p class="font-label-md text-label-md text-on-surface-variant mb-1" data-i18n="Sold Out Products">Sold Out Products</p>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface" id="soldOutCount">Loading...</h3>
+        </div>
+    </div>
+    <div class="flex justify-end items-center mb-4">
+        <select id="productFilter" class="p-2 border rounded border-outline-variant text-label-md font-label-md bg-surface cursor-pointer">
+            <option value="All" data-i18n="All Products">All Products</option>
+            <option value="Published" data-i18n="Published Products">Published Products</option>
+            <option value="Draft" data-i18n="Draft Products">Draft Products</option>
+            <option value="SoldOut" data-i18n="Sold Out Products">Sold Out Products</option>
+        </select>
+    </div>
+    <div class="grid grid-cols-1 gap-4" id="productListContainer">
+        <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant text-on-surface-variant font-label-md text-label-md">
+            <div class="col-span-6" data-i18n="PRODUCT DETAILS">PRODUCT DETAILS</div>
+            <div class="col-span-3 text-center" data-i18n="STATUS">STATUS</div>
+            <div class="col-span-2 text-center" data-i18n="DATE ADDED">DATE ADDED</div>
+            <div class="col-span-1 text-right" data-i18n="ACTION">ACTION</div>
+        </div>
+        <div id="productRows"></div>
+    </div>
+</div>
+
+<!-- WORKS SECTION -->
+<div id="sectionWorks" class="hidden">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-12">
+        <div class="bg-surface p-8 border border-outline-variant rounded hover:shadow-md transition-all duration-300">
+            <div class="flex justify-between items-start mb-4">
+                <span class="material-symbols-outlined text-secondary text-3xl">photo_library</span>
+                <span class="text-on-error-container bg-error-container px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider" data-i18n="Active">Active</span>
+            </div>
+            <p class="font-label-md text-label-md text-on-surface-variant mb-1" data-i18n="Total Work Items">Total Work Items</p>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface" id="totalWorkCount">Loading...</h3>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 gap-4" id="workListContainer">
+        <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant text-on-surface-variant font-label-md text-label-md">
+            <div class="col-span-6" data-i18n="WORK DETAILS">WORK DETAILS</div>
+            <div class="col-span-3 text-center" data-i18n="STATUS">STATUS</div>
+            <div class="col-span-2 text-center" data-i18n="DATE ADDED">DATE ADDED</div>
+            <div class="col-span-1 text-right" data-i18n="ACTION">ACTION</div>
+        </div>
+        <div id="workRows"></div>
+    </div>
+</div>
+
+</main>
+</div>
+
+<!-- Modals for Products -->
+<div id="addProductModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100] p-4">
+    <div class="bg-surface p-8 rounded border border-outline-variant shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        <h2 class="font-headline-sm mb-6 text-primary">Upload New Product</h2>
+        <form id="addProductForm" class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4">
+                <input type="text" id="p_name_en" placeholder="Product Name" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="p_desc_en" placeholder="Description" required class="p-2 border rounded border-outline-variant">
+            </div>
+            <select id="p_status" class="p-2 border rounded border-outline-variant">
+                <option value="Published">Published</option>
+                <option value="Draft">Draft</option>
+            </select>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="p_sold_out" class="rounded border-outline-variant text-primary">
+                    <label for="p_sold_out" class="font-label-md text-on-surface">Mark as Sold Out</label>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="p_pinned" class="rounded border-outline-variant text-primary">
+                    <label for="p_pinned" class="font-label-md text-on-surface">Pin Product</label>
+                </div>
+            </div>
+            <label class="text-sm font-label-md text-on-surface-variant">Product Image</label>
+            <input type="file" id="p_image" accept="image/*" required class="p-2 border rounded border-outline-variant text-sm">
+            <p id="uploadStatus" class="text-sm text-primary hidden">Saving...</p>
+            <div class="flex justify-end gap-2 mt-4">
+                <button type="button" onclick="document.getElementById('addProductModal').classList.add('hidden')" class="px-4 py-2 rounded text-on-surface-variant border border-outline-variant hover:bg-surface-container-low">Cancel</button>
+                <button type="submit" id="submitBtn" class="bg-primary text-on-primary px-4 py-2 rounded hover:opacity-90">Save Product</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="editProductModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100] p-4">
+    <div class="bg-surface p-8 rounded border border-outline-variant shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        <h2 class="font-headline-sm mb-6 text-primary">Edit Product</h2>
+        <form id="editProductForm" class="flex flex-col gap-4">
+            <input type="hidden" id="e_id">
+            <div class="flex flex-col gap-4">
+                <input type="text" id="e_name_en" placeholder="Product Name" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="e_desc_en" placeholder="Description" required class="p-2 border rounded border-outline-variant">
+            </div>
+            <select id="e_status" class="p-2 border rounded border-outline-variant">
+                <option value="Published">Published</option>
+                <option value="Draft">Draft</option>
+            </select>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="e_sold_out" class="rounded border-outline-variant text-primary">
+                    <label for="e_sold_out" class="font-label-md text-on-surface">Mark as Sold Out</label>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="e_pinned" class="rounded border-outline-variant text-primary">
+                    <label for="e_pinned" class="font-label-md text-on-surface">Pin Product</label>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-4">
+                <button type="button" onclick="document.getElementById('editProductModal').classList.add('hidden')" class="px-4 py-2 rounded text-on-surface-variant border border-outline-variant hover:bg-surface-container-low">Cancel</button>
+                <button type="submit" id="submitEditBtn" class="bg-primary text-on-primary px-4 py-2 rounded hover:opacity-90">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modals for Work -->
+<div id="addWorkModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100] p-4">
+    <div class="bg-surface p-8 rounded border border-outline-variant shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        <h2 class="font-headline-sm mb-6 text-secondary">Upload New Work</h2>
+        <form id="addWorkForm" class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4">
+                <input type="text" id="w_title_en" placeholder="Title" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="w_desc_en" placeholder="Description" required class="p-2 border rounded border-outline-variant">
+            </div>
+            <div class="flex items-center gap-4">
+                <select id="w_status" class="p-2 border rounded border-outline-variant flex-grow">
+                    <option value="Published">Published</option>
+                    <option value="Draft">Draft</option>
+                </select>
+                <div class="flex items-center gap-2 whitespace-nowrap">
+                    <input type="checkbox" id="w_pinned" class="rounded border-outline-variant text-secondary">
+                    <label for="w_pinned" class="font-label-md text-on-surface">Pin Work</label>
+                </div>
+            </div>
+            <label class="text-sm font-label-md text-on-surface-variant">Work Image</label>
+            <input type="file" id="w_image" accept="image/*" required class="p-2 border rounded border-outline-variant text-sm">
+            <p id="workUploadStatus" class="text-sm text-secondary hidden">Saving...</p>
+            <div class="flex justify-end gap-2 mt-4">
+                <button type="button" onclick="document.getElementById('addWorkModal').classList.add('hidden')" class="px-4 py-2 rounded text-on-surface-variant border border-outline-variant hover:bg-surface-container-low">Cancel</button>
+                <button type="submit" id="submitWorkBtn" class="bg-secondary text-on-secondary px-4 py-2 rounded hover:opacity-90">Save Work</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc, query } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { firebaseConfig } from "./firebase-config.js";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let activeTab = 'products'; // 'products' or 'works'
+    window.allProducts = [];
+    window.allWorks = [];
+
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            window.location.href = '/login';
+        } else {
+            document.getElementById('authLoading').classList.add('hidden');
+            document.getElementById('adminContent').classList.remove('hidden');
+            fetchProducts();
+            fetchWorks();
+        }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        signOut(auth).then(() => window.location.href = '/login');
+    });
+
+    // Tab Switching
+    document.getElementById('tabProducts').addEventListener('click', () => switchTab('products'));
+    document.getElementById('tabWorks').addEventListener('click', () => switchTab('works'));
+
+    function switchTab(tab) {
+        activeTab = tab;
+        const tp = document.getElementById('tabProducts');
+        const tw = document.getElementById('tabWorks');
+        if (tab === 'products') {
+            tp.classList.add('border-b-2', 'border-primary', 'text-primary');
+            tp.classList.remove('text-on-surface-variant');
+            tw.classList.remove('border-b-2', 'border-primary', 'text-primary');
+            tw.classList.add('text-on-surface-variant');
+            document.getElementById('sectionProducts').classList.remove('hidden');
+            document.getElementById('sectionWorks').classList.add('hidden');
+            document.getElementById('addBtn').classList.remove('hidden');
+            document.getElementById('addWorkBtn').classList.add('hidden');
+        } else {
+            tw.classList.add('border-b-2', 'border-primary', 'text-primary');
+            tw.classList.remove('text-on-surface-variant');
+            tp.classList.remove('border-b-2', 'border-primary', 'text-primary');
+            tp.classList.add('text-on-surface-variant');
+            document.getElementById('sectionWorks').classList.remove('hidden');
+            document.getElementById('sectionProducts').classList.add('hidden');
+            document.getElementById('addWorkBtn').classList.remove('hidden');
+            document.getElementById('addBtn').classList.add('hidden');
+        }
+    }
+
+    const compressImage = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = event => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 600;
+                    let scaleSize = 1;
+                    if (img.width > MAX_WIDTH) scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = img.width * scaleSize;
+                    canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.6));
+                }
+            }
+        });
+    };
+
+    // --- PRODUCTS ---
+    async function fetchProducts() {
+        try {
+            const q = query(collection(db, "products"));
+            const querySnapshot = await getDocs(q);
+            const products = [];
+            querySnapshot.forEach((doc) => products.push({ id: doc.id, ...doc.data() }));
+            products.reverse();
+            products.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+            window.allProducts = products;
+            document.getElementById('totalCount').innerText = products.length;
+            document.getElementById('draftCount').innerText = products.filter(p => p.status === 'Draft').length;
+            document.getElementById('soldOutCount').innerText = products.filter(p => p.soldOut === true).length;
+            renderProducts();
+        } catch (error) { console.error("Error fetching products:", error); }
+    }
+    
+    document.getElementById('productFilter').addEventListener('change', renderProducts);
+
+    function renderProducts() {
+        const container = document.getElementById('productRows');
+        container.innerHTML = '';
+        
+        const filterVal = document.getElementById('productFilter').value;
+        let filteredProducts = window.allProducts;
+        if (filterVal === 'Published') {
+            filteredProducts = window.allProducts.filter(p => p.status === 'Published');
+        } else if (filterVal === 'Draft') {
+            filteredProducts = window.allProducts.filter(p => p.status === 'Draft');
+        } else if (filterVal === 'SoldOut') {
+            filteredProducts = window.allProducts.filter(p => p.soldOut === true);
+        }
+
+        if(filteredProducts.length === 0) {
+            container.innerHTML = '<p class="p-6 text-center text-on-surface-variant">No products found for this filter.</p>';
+            return;
+        }
+
+
+
+        filteredProducts.forEach(p => {
+            const row = document.createElement('div');
+            row.className = 'grid grid-cols-1 md:grid-cols-12 gap-4 items-center px-6 py-6 bg-white border border-outline-variant rounded hover:border-primary transition-all group mb-4';
+
+            const statusClass = p.status === 'Published' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container-highest text-on-surface-variant';
+            const displayName = p.name_en || p.name;
+            const displayDesc = p.desc_en || p.sku;
+
+            row.innerHTML = `
+                <div class="col-span-1 md:col-span-6 flex items-center gap-4 min-w-0">
+                    <div class="w-16 h-16 flex-shrink-0 bg-surface-container-low rounded overflow-hidden">
+                        <img class="w-full h-full object-cover" src="${p.image_url}" alt="img"/>
+                    </div>
+                    <div class="min-w-0">
+                        <h4 class="font-label-md text-label-md text-on-surface truncate flex items-center">
+                            ${displayName}
+                            ${p.pinned ? '<span class="material-symbols-outlined text-[16px] text-primary ml-1" title="Pinned">push_pin</span>' : ''}
+                        </h4>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant truncate">${displayDesc}</p>
+                    </div>
+                </div>
+                <div class="col-span-1 md:col-span-6 flex flex-wrap md:flex-nowrap justify-between md:justify-end items-center gap-4 mt-2 md:mt-0 border-t border-outline-variant md:border-t-0 pt-4 md:pt-0">
+                    <div class="flex flex-col md:items-center gap-1">
+                        <span class="${statusClass} px-3 py-1 rounded-full text-[12px] font-semibold">${p.status}</span>
+                        ${p.soldOut ? '<span class="bg-error text-on-error px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest">Sold Out</span>' : ''}
+                    </div>
+                    <div class="text-center font-body-sm text-on-surface-variant hidden md:block">${p.date_added || 'Unknown'}</div>
+                    <div class="flex justify-end gap-2">
+                        <button class="p-2 bg-surface-container text-primary rounded hover:opacity-80 edit-btn" data-id="${p.id}"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+                        <button class="p-2 bg-surface-container text-error rounded hover:opacity-80 delete-btn" data-id="${p.id}"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+
+        // Delete Product
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (confirm('Delete this product?')) {
+                    await deleteDoc(doc(db, "products", btn.getAttribute('data-id')));
+                    fetchProducts();
+                }
+            });
+        });
+
+        // Edit Product Modal
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                const product = window.allProducts.find(p => p.id === id);
+                document.getElementById('e_id').value = id;
+                document.getElementById('e_name_en').value = product.name_en || product.name || '';
+                document.getElementById('e_desc_en').value = product.desc_en || product.sku || '';
+                document.getElementById('e_status').value = product.status;
+                document.getElementById('e_sold_out').checked = product.soldOut === true;
+                document.getElementById('e_pinned').checked = product.pinned === true;
+                document.getElementById('editProductModal').classList.remove('hidden');
+            });
+        });
+    }
+
+    document.getElementById('addBtn').addEventListener('click', () => document.getElementById('addProductModal').classList.remove('hidden'));
+    
+    document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        document.getElementById('uploadStatus').classList.remove('hidden');
+        try {
+            const base64Image = await compressImage(document.getElementById('p_image').files[0]);
+            const payload = {
+                name_en: document.getElementById('p_name_en').value,
+                desc_en: document.getElementById('p_desc_en').value,
+                status: document.getElementById('p_status').value,
+                soldOut: document.getElementById('p_sold_out').checked,
+                pinned: document.getElementById('p_pinned').checked,
+                image_url: base64Image,
+                date_added: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })
+            };
+            await addDoc(collection(db, "products"), payload);
+            document.getElementById('addProductModal').classList.add('hidden');
+            document.getElementById('addProductForm').reset();
+            fetchProducts();
+        } catch (error) { alert("Error adding product"); } 
+        finally { btn.disabled = false; document.getElementById('uploadStatus').classList.add('hidden'); }
+    });
+
+    document.getElementById('editProductForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('e_id').value;
+        const payload = {
+            name_en: document.getElementById('e_name_en').value,
+            desc_en: document.getElementById('e_desc_en').value,
+            status: document.getElementById('e_status').value,
+            soldOut: document.getElementById('e_sold_out').checked,
+            pinned: document.getElementById('e_pinned').checked
+        };
+        await updateDoc(doc(db, "products", id), payload);
+        document.getElementById('editProductModal').classList.add('hidden');
+        document.getElementById('editProductForm').reset();
+        fetchProducts();
+    });
+
+    // --- WORKS ---
+    async function fetchWorks() {
+        try {
+            const q = query(collection(db, "works"));
+            const querySnapshot = await getDocs(q);
+            const works = [];
+            querySnapshot.forEach((doc) => works.push({ id: doc.id, ...doc.data() }));
+            works.reverse();
+            works.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+            window.allWorks = works;
+            document.getElementById('totalWorkCount').innerText = works.length;
+            renderWorks();
+        } catch (error) { console.error("Error fetching works:", error); }
+    }
+
+    function renderWorks() {
+        const container = document.getElementById('workRows');
+        container.innerHTML = '';
+        if(window.allWorks.length === 0) {
+            container.innerHTML = '<p class="p-6 text-center text-on-surface-variant">No works found. Upload one!</p>';
+            return;
+        }
+
+
+
+        window.allWorks.forEach(w => {
+            const row = document.createElement('div');
+            row.className = 'grid grid-cols-1 md:grid-cols-12 gap-4 items-center px-6 py-6 bg-white border border-outline-variant rounded hover:border-secondary transition-all group mb-4';
+
+            const statusClass = w.status === 'Published' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container-highest text-on-surface-variant';
+            const displayTitle = w.title_en;
+            const displayDesc = w.desc_en;
+
+            row.innerHTML = `
+                <div class="col-span-1 md:col-span-6 flex items-center gap-4 min-w-0">
+                    <div class="w-24 h-16 flex-shrink-0 bg-surface-container-low rounded overflow-hidden">
+                        <img class="w-full h-full object-cover" src="${w.image_url}" alt="img"/>
+                    </div>
+                    <div class="min-w-0">
+                        <h4 class="font-label-md text-label-md text-on-surface truncate flex items-center">
+                            ${displayTitle}
+                            ${w.pinned ? '<span class="material-symbols-outlined text-[16px] text-secondary ml-1" title="Pinned">push_pin</span>' : ''}
+                        </h4>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant truncate">${displayDesc}</p>
+                    </div>
+                </div>
+                <div class="col-span-1 md:col-span-6 flex flex-wrap md:flex-nowrap justify-between md:justify-end items-center gap-4 mt-2 md:mt-0 border-t border-outline-variant md:border-t-0 pt-4 md:pt-0">
+                    <div class="flex flex-col md:items-center gap-1">
+                        <span class="${statusClass} px-3 py-1 rounded-full text-[12px] font-semibold">${w.status}</span>
+                    </div>
+                    <div class="text-center font-body-sm text-on-surface-variant hidden md:block">${w.date_added || 'Unknown'}</div>
+                    <div class="flex justify-end gap-2">
+                        <button class="p-2 bg-surface-container text-error rounded hover:opacity-80 delete-work-btn" data-id="${w.id}"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+
+        // Delete Work
+        document.querySelectorAll('.delete-work-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (confirm('Delete this work item?')) {
+                    await deleteDoc(doc(db, "works", btn.getAttribute('data-id')));
+                    fetchWorks();
+                }
+            });
+        });
+    }
+
+    document.getElementById('addWorkBtn').addEventListener('click', () => document.getElementById('addWorkModal').classList.remove('hidden'));
+
+    document.getElementById('addWorkForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submitWorkBtn');
+        btn.disabled = true;
+        document.getElementById('workUploadStatus').classList.remove('hidden');
+        try {
+            const base64Image = await compressImage(document.getElementById('w_image').files[0]);
+            const payload = {
+                title_en: document.getElementById('w_title_en').value,
+                desc_en: document.getElementById('w_desc_en').value,
+                status: document.getElementById('w_status').value,
+                pinned: document.getElementById('w_pinned').checked,
+                image_url: base64Image,
+                date_added: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })
+            };
+            await addDoc(collection(db, "works"), payload);
+            document.getElementById('addWorkModal').classList.add('hidden');
+            document.getElementById('addWorkForm').reset();
+            fetchWorks();
+        } catch (error) { alert("Error adding work"); } 
+        finally { btn.disabled = false; document.getElementById('workUploadStatus').classList.add('hidden'); }
+    });
+
+    window.addEventListener('languageChanged', () => {
+        if(window.allProducts.length > 0) renderProducts();
+        if(window.allWorks.length > 0) renderWorks();
+    });
+</script>
+<script src="/translations.js"></script>
+</body>
+</html>
