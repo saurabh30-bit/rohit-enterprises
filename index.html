@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="/output.css">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
 <style>
@@ -337,10 +338,42 @@
             document.getElementById('modalDesc').textContent = displayDesc;
             
             const soldOutBadge = document.getElementById('modalSoldOut');
+            const buyNowBtn = document.getElementById('buyNowBtn');
+            
             if (product.soldOut) {
                 soldOutBadge.classList.remove('hidden');
+                buyNowBtn.classList.add('hidden');
             } else {
                 soldOutBadge.classList.add('hidden');
+                buyNowBtn.classList.remove('hidden');
+                buyNowBtn.onclick = function() {
+                    const priceInPaise = product.price ? parseInt(product.price) * 100 : 50000; // Default ₹500
+                    const options = {
+                        "key": "rzp_test_YOUR_TEST_KEY", // Replace with real key in production
+                        "amount": priceInPaise.toString(),
+                        "currency": "INR",
+                        "name": "Pranav Enterprises",
+                        "description": "Purchase " + displayName,
+                        "image": "/logo.png",
+                        "handler": function (response){
+                            alert("Payment Successful!\nPayment ID: " + response.razorpay_payment_id);
+                            closeDetailsModal();
+                        },
+                        "prefill": {
+                            "name": "",
+                            "email": "",
+                            "contact": ""
+                        },
+                        "theme": {
+                            "color": "#111827"
+                        }
+                    };
+                    const rzp = new Razorpay(options);
+                    rzp.on('payment.failed', function (response){
+                        alert("Payment Failed!\nReason: " + response.error.description);
+                    });
+                    rzp.open();
+                };
             }
 
             document.getElementById('detailsModal').classList.remove('hidden');
@@ -361,6 +394,7 @@
             document.getElementById('modalTitle').textContent = currentLang === 'mr' && work.title_mr ? work.title_mr : work.title_en;
             document.getElementById('modalDesc').textContent = currentLang === 'mr' && work.desc_mr ? work.desc_mr : work.desc_en;
             document.getElementById('modalSoldOut').classList.add('hidden');
+            document.getElementById('buyNowBtn').classList.add('hidden');
             
             document.getElementById('detailsModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
@@ -386,7 +420,13 @@
         <div class="md:w-1/2 w-full p-8 flex flex-col">
             <div id="modalSoldOut" class="hidden mb-4 self-start bg-error text-on-error font-bold text-label-sm px-3 py-1 rounded">SOLD OUT</div>
             <h2 id="modalTitle" class="font-headline-md text-3xl text-on-background mb-4"></h2>
-            <p id="modalDesc" class="font-body-md text-on-surface-variant leading-relaxed"></p>
+            <p id="modalDesc" class="font-body-md text-on-surface-variant leading-relaxed mb-6"></p>
+            <div class="mt-auto pt-4 border-t border-outline-variant flex gap-4">
+                <button id="buyNowBtn" class="bg-primary text-on-primary hover:opacity-90 px-6 py-3 rounded font-bold transition-opacity w-full flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">shopping_cart</span>
+                    Pay Now (Buy)
+                </button>
+            </div>
         </div>
     </div>
 </div>
