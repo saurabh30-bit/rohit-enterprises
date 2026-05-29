@@ -1,8 +1,8 @@
 // Translation Dictionary
 const translations = {
-    "Rohit Enterprises": {
-        "en": "Rohit Enterprises",
-        "mr": "रोहित एंटरप्रायजेस"
+    "Pranav Enterprises": {
+        "en": "Pranav Enterprises",
+        "mr": "प्रणव एंटरप्रायजेस"
     },
     "India's Best Theka": {
         "en": "India's Best Theka",
@@ -181,8 +181,8 @@ const translations = {
         "mr": "ई-मेल"
     },
     "Copyright Text": {
-        "en": "© 2024 Rohit Enterprises. All rights reserved.",
-        "mr": "© २०२४ रोहित एंटरप्रायजेस. सर्व हक्क राखीव."
+        "en": "© 2024 Pranav Enterprises. All rights reserved.",
+        "mr": "© २०२४ प्रणव एंटरप्रायजेस. सर्व हक्क राखीव."
     },
     "Privacy Policy": {
         "en": "Privacy Policy",
@@ -237,12 +237,12 @@ const translations = {
         "mr": "अपॉइंटमेंट बुक करा"
     },
     "About Us": {
-        "en": "About Rohit Enterprises",
-        "mr": "रोहित एंटरप्रायजेस बद्दल"
+        "en": "About Pranav Enterprises",
+        "mr": "प्रणव एंटरप्रायजेस बद्दल"
     },
     "About Desc 1": {
-        "en": "Located in the heart of Sawantwadi, Sindhudurg, Rohit Enterprises is built on a foundation of trust and a relentless commitment to excellence. We have been providing top-tier professional solutions and products that our community relies on.",
-        "mr": "सावंतवाडी, सिंधुदुर्गच्या मध्यभागी स्थित, रोहित एंटरप्रायजेस विश्वासाच्या पायावर आणि उत्कृष्टतेच्या निरंतर वचनबद्धतेवर बांधले गेले आहे. आम्ही आमच्या समुदायासाठी उत्कृष्ट व्यावसायिक उपाय आणि उत्पादने प्रदान करत आहोत."
+        "en": "Located in the heart of Sawantwadi, Sindhudurg, Pranav Enterprises is built on a foundation of trust and a relentless commitment to excellence. We have been providing top-tier professional solutions and products that our community relies on.",
+        "mr": "सावंतवाडी, सिंधुदुर्गच्या मध्यभागी स्थित, प्रणव एंटरप्रायजेस विश्वासाच्या पायावर आणि उत्कृष्टतेच्या निरंतर वचनबद्धतेवर बांधले गेले आहे. आम्ही आमच्या समुदायासाठी उत्कृष्ट व्यावसायिक उपाय आणि उत्पादने प्रदान करत आहोत."
     },
     "About Desc 2": {
         "en": "Our approach is simple: understand the needs of our clients and deliver beyond expectations. By combining local expertise with industry-leading standards, we ensure every interaction adds value.",
@@ -276,9 +276,9 @@ const translations = {
         "en": "🇮🇳 YOUR TRUSTED ENTERPRISE 🇮🇳",
         "mr": "🇮🇳 तुमचा विश्वासार्ह उद्योग 🇮🇳"
     },
-    "Rohit Enterprises": {
-        "en": "Rohit Enterprises",
-        "mr": "रोहित एंटरप्रायजेस"
+    "Pranav Enterprises": {
+        "en": "Pranav Enterprises",
+        "mr": "प्रणव एंटरप्रायजेस"
     },
     "Quality Trust": {
         "en": "✨ Delivering Quality, Building Trust ✨",
