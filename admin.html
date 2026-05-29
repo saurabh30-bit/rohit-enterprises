@@ -63,7 +63,6 @@
 <div class="flex gap-6 mb-8 border-b border-outline-variant">
    <button id="tabProducts" class="pb-2 border-b-2 border-primary text-primary font-bold transition-all text-lg" data-i18n="Products">Products</button>
    <button id="tabWorks" class="pb-2 text-on-surface-variant font-bold transition-all text-lg hover:text-primary" data-i18n="Work">Work</button>
-   <button id="tabInquiries" class="pb-2 text-on-surface-variant font-bold transition-all text-lg hover:text-primary" data-i18n="Inquiries">Inquiries</button>
 </div>
 
 <!-- PRODUCTS SECTION -->
@@ -134,20 +133,10 @@
         </div>
         <div id="workRows" class="overflow-y-auto max-h-[60vh] pr-2"></div>
     </div>
-</div>
-
-<!-- INQUIRIES SECTION -->
-<div id="sectionInquiries" class="hidden">
-    <div class="grid grid-cols-1 gap-4" id="inquiryListContainer">
-        <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant text-on-surface-variant font-label-md text-label-md">
-            <div class="col-span-3" data-i18n="SENDER">SENDER</div>
-            <div class="col-span-6" data-i18n="MESSAGE">MESSAGE</div>
-            <div class="col-span-2 text-center" data-i18n="DATE">DATE</div>
-            <div class="col-span-1 text-right" data-i18n="ACTION">ACTION</div>
-        </div>
-        <div id="inquiryRows" class="overflow-y-auto max-h-[60vh] pr-2"></div>
     </div>
 </div>
+
+</main>
 
 </main>
 </div>
@@ -298,7 +287,6 @@
             document.getElementById('adminContent').classList.remove('hidden');
             fetchProducts();
             fetchWorks();
-            fetchInquiries();
         }
     });
 
@@ -309,35 +297,29 @@
     // Tab Switching
     document.getElementById('tabProducts').addEventListener('click', () => switchTab('products'));
     document.getElementById('tabWorks').addEventListener('click', () => switchTab('works'));
-    document.getElementById('tabInquiries').addEventListener('click', () => switchTab('inquiries'));
 
     function switchTab(tab) {
         activeTab = tab;
         const tp = document.getElementById('tabProducts');
         const tw = document.getElementById('tabWorks');
-        const ti = document.getElementById('tabInquiries');
-        
-        tp.classList.remove('border-b-2', 'border-primary', 'text-primary'); tp.classList.add('text-on-surface-variant');
-        tw.classList.remove('border-b-2', 'border-primary', 'text-primary'); tw.classList.add('text-on-surface-variant');
-        ti.classList.remove('border-b-2', 'border-primary', 'text-primary'); ti.classList.add('text-on-surface-variant');
-        
-        document.getElementById('sectionProducts').classList.add('hidden');
-        document.getElementById('sectionWorks').classList.add('hidden');
-        document.getElementById('sectionInquiries').classList.add('hidden');
-        document.getElementById('addBtn').classList.add('hidden');
-        document.getElementById('addWorkBtn').classList.add('hidden');
-
         if (tab === 'products') {
-            tp.classList.add('border-b-2', 'border-primary', 'text-primary'); tp.classList.remove('text-on-surface-variant');
+            tp.classList.add('border-b-2', 'border-primary', 'text-primary');
+            tp.classList.remove('text-on-surface-variant');
+            tw.classList.remove('border-b-2', 'border-primary', 'text-primary');
+            tw.classList.add('text-on-surface-variant');
             document.getElementById('sectionProducts').classList.remove('hidden');
+            document.getElementById('sectionWorks').classList.add('hidden');
             document.getElementById('addBtn').classList.remove('hidden');
-        } else if (tab === 'works') {
-            tw.classList.add('border-b-2', 'border-primary', 'text-primary'); tw.classList.remove('text-on-surface-variant');
-            document.getElementById('sectionWorks').classList.remove('hidden');
-            document.getElementById('addWorkBtn').classList.remove('hidden');
+            document.getElementById('addWorkBtn').classList.add('hidden');
         } else {
-            ti.classList.add('border-b-2', 'border-primary', 'text-primary'); ti.classList.remove('text-on-surface-variant');
-            document.getElementById('sectionInquiries').classList.remove('hidden');
+            tw.classList.add('border-b-2', 'border-primary', 'text-primary');
+            tw.classList.remove('text-on-surface-variant');
+            tp.classList.remove('border-b-2', 'border-primary', 'text-primary');
+            tp.classList.add('text-on-surface-variant');
+            document.getElementById('sectionWorks').classList.remove('hidden');
+            document.getElementById('sectionProducts').classList.add('hidden');
+            document.getElementById('addWorkBtn').classList.remove('hidden');
+            document.getElementById('addBtn').classList.add('hidden');
         }
     }
 
@@ -635,64 +617,6 @@
         document.getElementById('editWorkForm').reset();
         fetchWorks();
     });
-
-    // --- INQUIRIES ---
-    async function fetchInquiries() {
-        try {
-            const q = query(collection(db, "inquiries"));
-            const querySnapshot = await getDocs(q);
-            const inquiries = [];
-            querySnapshot.forEach((doc) => {
-                inquiries.push({ id: doc.id, ...doc.data() });
-            });
-            inquiries.sort((a, b) => new Date(b.date) - new Date(a.date));
-            renderInquiries(inquiries);
-        } catch (error) { console.error('Error fetching inquiries', error); }
-    }
-
-    function renderInquiries(inquiries) {
-        const container = document.getElementById('inquiryRows');
-        container.innerHTML = '';
-        if (inquiries.length === 0) {
-            container.innerHTML = '<p class="text-center py-8 text-on-surface-variant">No inquiries found.</p>';
-            return;
-        }
-
-        inquiries.forEach(i => {
-            const row = document.createElement('div');
-            row.className = "grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-6 border-b border-outline-variant items-center hover:bg-surface-container-lowest transition-colors bg-surface";
-            const dateStr = new Date(i.date).toLocaleDateString();
-            
-            row.innerHTML = `
-                <div class="col-span-1 md:col-span-3 flex flex-col min-w-0">
-                    <span class="md:hidden text-[10px] font-bold text-on-surface-variant mb-1">SENDER</span>
-                    <strong class="font-label-md text-on-surface truncate">${i.name}</strong>
-                    <a href="mailto:${i.email}" class="text-secondary text-body-sm hover:underline truncate">${i.email}</a>
-                </div>
-                <div class="col-span-1 md:col-span-6 flex flex-col mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-t-0 min-w-0">
-                    <span class="md:hidden text-[10px] font-bold text-on-surface-variant mb-1">MESSAGE</span>
-                    <p class="text-body-sm text-on-surface-variant whitespace-pre-wrap break-words">${i.message}</p>
-                </div>
-                <div class="col-span-1 md:col-span-2 flex flex-col md:items-center font-body-sm text-on-surface-variant mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-t-0">
-                    <span class="md:hidden text-[10px] font-bold text-on-surface-variant mb-1">DATE</span>
-                    ${dateStr}
-                </div>
-                <div class="col-span-1 md:col-span-1 flex justify-start md:justify-end gap-2 mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-t-0">
-                    <button class="p-2 bg-surface-container text-error rounded hover:opacity-80 delete-inq-btn" data-id="${i.id}"><span class="material-symbols-outlined text-[20px]">delete</span></button>
-                </div>
-            `;
-            container.appendChild(row);
-        });
-
-        document.querySelectorAll('.delete-inq-btn').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                if (confirm('Delete this inquiry?')) {
-                    await deleteDoc(doc(db, "inquiries", btn.getAttribute('data-id')));
-                    fetchInquiries();
-                }
-            });
-        });
-    }
 
     window.addEventListener('languageChanged', () => {
         if(window.allProducts.length > 0) renderProducts();
