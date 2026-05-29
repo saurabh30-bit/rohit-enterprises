@@ -283,6 +283,46 @@ const translations = {
     "Quality Trust": {
         "en": "✨ Delivering Quality, Building Trust ✨",
         "mr": "✨ गुणवत्ता प्रदान करणे, विश्वास निर्माण करणे ✨"
+    },
+    "Get in Touch": {
+        "en": "Get in Touch",
+        "mr": "संपर्कात रहा"
+    },
+    "Contact Form Desc": {
+        "en": "Have a question or want to work with us? Send us a message below.",
+        "mr": "काही प्रश्न आहेत किंवा आमच्यासोबत काम करायचे आहे? खाली आम्हाला एक संदेश पाठवा."
+    },
+    "Your Name": {
+        "en": "Your Name",
+        "mr": "तुमचे नाव"
+    },
+    "Your Email": {
+        "en": "Your Email",
+        "mr": "तुमचा ईमेल"
+    },
+    "Message": {
+        "en": "Message",
+        "mr": "संदेश"
+    },
+    "Send Message": {
+        "en": "Send Message",
+        "mr": "संदेश पाठवा"
+    },
+    "Message Sent!": {
+        "en": "Your message has been sent successfully. We will get back to you soon!",
+        "mr": "तुमचा संदेश यशस्वीरित्या पाठवला गेला आहे. आम्ही लवकरच आपल्याशी संपर्क साधू!"
+    },
+    "Inquiries": {
+        "en": "Inquiries",
+        "mr": "चौकशी"
+    },
+    "SENDER": {
+        "en": "SENDER",
+        "mr": "पाठवणारा"
+    },
+    "DATE": {
+        "en": "DATE",
+        "mr": "तारीख"
     }
 };
 
