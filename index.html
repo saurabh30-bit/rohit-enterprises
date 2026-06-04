@@ -315,9 +315,8 @@
                     </div>
                     <h3 class="font-headline-sm text-headline-sm text-on-background mb-1 md:mb-2 text-sm md:text-xl truncate">${displayName}</h3>
                     <p class="font-body-md text-primary font-bold mb-4">₹ ${p.price || '0'}</p>
-                    <div class="mt-auto flex gap-2">
+                    <div class="mt-auto flex gap-2 w-full">
                         <button class="flex-1 border border-outline text-on-surface hover:bg-surface-variant py-2 px-2 md:px-4 rounded text-label-sm md:text-label-md font-label-md transition-colors" onclick="openDetailsModal('${p.id}')">${detailsText}</button>
-                        ${!p.soldOut ? `<button class="bg-primary text-on-primary hover:opacity-90 py-2 px-3 rounded transition-colors flex items-center justify-center" onclick="quickAddToCart('${p.id}')" title="Add to Cart"><span class="material-symbols-outlined text-[18px]">add_shopping_cart</span></button>` : ''}
                     </div>
                 `;
                 grid.appendChild(card);
