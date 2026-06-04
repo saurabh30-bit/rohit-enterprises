@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta name="description" content="Pranav Enterprises — Your trusted partner for quality products and professional solutions in Sawantwadi, Sindhudurg. Browse our collection and shop online." />
-<link rel="icon" type="image/png" href="/logo.png" />
+<meta name="description" content="Pranav Enterprises - Your trusted source for professional enterprise solutions and products.">
 <title>Pranav Enterprises | Professional Solutions</title>
+<link rel="icon" href="/logo.png" type="image/png">
 <link rel="stylesheet" href="/output.css">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -42,17 +42,6 @@
             .hero-title { font-size: 5rem; }
             .hero-tagline { font-size: 2.5rem; }
         }
-        /* Toast notification */
-        .toast {
-            position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
-            background: #1a1a2e; color: #fff; padding: 12px 24px; border-radius: 8px;
-            font-size: 14px; font-weight: 600; z-index: 9999; opacity: 0;
-            transition: all 0.3s ease; pointer-events: none; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        /* Cart backdrop */
-        #cart-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 140; }
-        #cart-backdrop.active { display: block; }
     </style>
 </head>
 <body class="font-body-md text-body-md overflow-x-hidden">
@@ -60,11 +49,11 @@
 <header class="w-full top-0 sticky z-50 bg-surface dark:bg-on-background border-b border-outline-variant dark:border-outline">
 <nav class="flex justify-between items-center h-16 px-4 md:px-margin-desktop max-w-container-max mx-auto">
 <div class="flex items-center gap-4">
-<img src="/logo.png" alt="R Logo" class="w-9 h-9 rounded-full object-cover shadow-sm"/>
+<img src="/logo.png" alt="Pranav Enterprises Logo" class="w-9 h-9 rounded-full object-cover shadow-sm"/>
 <div class="flex items-center gap-4 text-on-surface-variant">
-    <a href="https://wa.me/918275851544" target="_blank" class="hover:text-primary transition-colors text-lg" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-    <a href="https://www.facebook.com/" target="_blank" class="hover:text-primary transition-colors text-lg" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-    <a href="https://www.instagram.com/" target="_blank" class="hover:text-primary transition-colors text-lg" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://wa.me/918275851544" class="hover:text-primary transition-colors text-lg" aria-label="WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://facebook.com" class="hover:text-primary transition-colors text-lg" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://instagram.com" class="hover:text-primary transition-colors text-lg" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
 </div>
 </div>
 
@@ -106,7 +95,14 @@
 <div class="flex flex-col items-center text-center mb-12 gap-4">
 <div class="max-w-2xl mx-auto">
 <h2 class="font-headline-md text-headline-md text-on-background mb-4" data-i18n="Our Collection">Our Collection</h2>
-<p class="font-body-md text-body-md text-on-surface-variant" data-i18n="Collection Desc">Browse our best and finest selections.</p>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8" data-i18n="Collection Desc">Browse our best and finest selections.</p>
+</div>
+<div class="max-w-2xl mx-auto w-full flex flex-col sm:flex-row gap-4 px-4">
+    <input type="text" id="searchInput" placeholder="Search products..." class="flex-1 p-3 border border-outline-variant rounded bg-surface focus:border-primary outline-none">
+    <select id="stockFilter" class="p-3 border border-outline-variant rounded bg-surface focus:border-primary outline-none">
+        <option value="all">All Products</option>
+        <option value="in_stock">In Stock</option>
+    </select>
 </div>
 </div>
 <div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
@@ -171,7 +167,8 @@
 <span class="material-symbols-outlined text-[48px] text-primary mb-6">mail</span>
 <h3 class="font-headline-sm text-headline-sm text-on-background mb-4" data-i18n="Electronic Mail">Electronic Mail</h3>
 <p class="font-body-md text-body-md text-on-surface-variant">
-                            pranaventerprises@gmail.com
+                            <a href="mailto:contact@pranaventerprises.in" class="hover:text-primary">contact@pranaventerprises.in</a><br/>
+                            <a href="mailto:support@pranaventerprises.in" class="hover:text-primary">support@pranaventerprises.in</a>
                         </p>
 </div>
 </div>
@@ -187,14 +184,14 @@
                     Pranav Enterprises
                 </div>
 <p class="font-label-md text-label-md text-on-surface-variant dark:text-on-secondary-container" data-i18n="Copyright Text">
-                    © 2025 Pranav Enterprises. All rights reserved.
+                    © 2026 Pranav Enterprises. All rights reserved.
                 </p>
 </div>
 <div class="flex flex-wrap justify-center gap-6 md:gap-8">
-<a class="font-label-md text-label-md transition-all text-on-surface-variant dark:text-on-secondary-container hover:underline hover:text-primary" href="#" data-i18n="Privacy Policy">Privacy Policy</a>
-<a class="font-label-md text-label-md transition-all text-on-surface-variant dark:text-on-secondary-container hover:underline hover:text-primary" href="#" data-i18n="Terms of Service">Terms of Service</a>
-<a class="font-label-md text-label-md transition-all text-on-surface-variant dark:text-on-secondary-container hover:underline hover:text-primary" href="#" data-i18n="Security">Security</a>
-<a class="font-label-md text-label-md transition-all text-on-surface-variant dark:text-on-secondary-container hover:underline hover:text-primary" href="#" data-i18n="Accessibility">Accessibility</a>
+<a class="font-label-md text-label-md transition-all text-on-surface-variant dark:text-on-secondary-container hover:underline hover:text-primary" href="/about.html" data-i18n="Privacy Policy">Privacy Policy</a>
+<a class="font-label-md text-label-md transition-all text-on-surface-variant dark:text-on-secondary-container hover:underline hover:text-primary" href="/about.html" data-i18n="Terms of Service">Terms of Service</a>
+<a class="font-label-md text-label-md transition-all text-on-surface-variant dark:text-on-secondary-container hover:underline hover:text-primary" href="/about.html" data-i18n="Security">Security</a>
+<a class="font-label-md text-label-md transition-all text-on-surface-variant dark:text-on-secondary-container hover:underline hover:text-primary" href="/about.html" data-i18n="Accessibility">Accessibility</a>
 </div>
 </div>
 </footer>
@@ -238,7 +235,10 @@
                     </div>
                     <h3 class="font-headline-sm text-headline-sm text-on-background mb-1 md:mb-2 text-sm md:text-xl truncate">${displayName}</h3>
                     <p class="font-body-md text-primary font-bold mb-4">₹ ${p.price || '0'}</p>
-                    <button class="mt-auto border border-outline text-on-surface hover:bg-surface-variant py-2 px-4 rounded text-label-md font-label-md transition-colors w-full" onclick="openDetailsModal('${p.id}')">${detailsText}</button>
+                    <div class="mt-auto flex gap-2">
+                        <button class="flex-1 border border-outline text-on-surface hover:bg-surface-variant py-2 px-2 md:px-4 rounded text-label-sm md:text-label-md font-label-md transition-colors" onclick="openDetailsModal('${p.id}')">${detailsText}</button>
+                        ${!p.soldOut ? `<button class="bg-primary text-on-primary hover:opacity-90 py-2 px-3 rounded transition-colors flex items-center justify-center" onclick="quickAddToCart('${p.id}')" title="Add to Cart"><span class="material-symbols-outlined text-[18px]">add_shopping_cart</span></button>` : ''}
+                    </div>
                 `;
                 grid.appendChild(card);
             });
@@ -268,11 +268,72 @@
                 allProducts.reverse();
                 allProducts.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
                 
-                renderProducts();
+                // Add event listeners for search and filter
+                document.getElementById('searchInput').addEventListener('input', () => { displayLimit = 8; renderFilteredProducts(); });
+                document.getElementById('stockFilter').addEventListener('change', () => { displayLimit = 8; renderFilteredProducts(); });
+
+                renderFilteredProducts();
             } catch(e) {
                 console.error('Error fetching products', e);
             }
         }
+
+        function renderFilteredProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const stockFilter = document.getElementById('stockFilter').value;
+            
+            const filtered = allProducts.filter(p => {
+                const name = (p.name_en || p.name || '').toLowerCase();
+                const desc = (p.desc_en || p.sku || '').toLowerCase();
+                const matchesSearch = name.includes(searchTerm) || desc.includes(searchTerm);
+                const matchesStock = stockFilter === 'all' || (stockFilter === 'in_stock' && !p.soldOut);
+                return matchesSearch && matchesStock;
+            });
+
+            const grid = document.getElementById('productGrid');
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+            grid.innerHTML = '';
+            
+            const productsToRender = filtered.slice(0, displayLimit);
+            
+            productsToRender.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'group bg-surface border border-outline-variant p-4 md:p-6 flex flex-col transition-all hover:shadow-lg hover:-translate-y-1';
+                
+                const soldOutBadge = p.soldOut ? '<div class="absolute top-2 right-2 md:top-4 md:right-4 bg-error text-on-error font-bold font-headline-sm px-2 py-1 md:px-4 md:py-2 rounded shadow-md transform rotate-12 z-10 text-[10px] md:text-base">SOLD OUT</div>' : '';
+                const imgClass = p.soldOut ? 'w-full aspect-square object-cover mb-4 transition-all duration-500 opacity-50' : 'w-full aspect-square object-cover mb-4 transition-all duration-500';
+
+                const currentLang = window.currentLang || 'en';
+                const displayName = currentLang === 'mr' && p.name_mr ? p.name_mr : (p.name_en || p.name);
+                const detailsText = currentLang === 'mr' ? 'तपशील पहा' : 'View Details';
+                const pinSticker = p.pinned ? '<div class="absolute top-2 left-2 md:top-4 md:left-4 bg-surface text-primary rounded-full p-1.5 shadow-md z-10 flex items-center justify-center border border-outline-variant"><span class="material-symbols-outlined text-[16px]">push_pin</span></div>' : '';
+
+                card.innerHTML = `
+                    <div class="relative">
+                        ${pinSticker}
+                        ${soldOutBadge}
+                        <img class="${imgClass}" src="${p.image_url}" alt="${displayName}"/>
+                    </div>
+                    <h3 class="font-headline-sm text-headline-sm text-on-background mb-1 md:mb-2 text-sm md:text-xl truncate">${displayName}</h3>
+                    <p class="font-body-md text-primary font-bold mb-4">₹ ${p.price || '0'}</p>
+                    <div class="mt-auto flex gap-2">
+                        <button class="flex-1 border border-outline text-on-surface hover:bg-surface-variant py-2 px-2 md:px-4 rounded text-label-sm md:text-label-md font-label-md transition-colors" onclick="openDetailsModal('${p.id}')">${detailsText}</button>
+                        ${!p.soldOut ? `<button class="bg-primary text-on-primary hover:opacity-90 py-2 px-3 rounded transition-colors flex items-center justify-center" onclick="quickAddToCart('${p.id}')" title="Add to Cart"><span class="material-symbols-outlined text-[18px]">add_shopping_cart</span></button>` : ''}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = '<p class="col-span-full text-center py-12">No products match your search.</p>';
+                loadMoreContainer.classList.add('hidden');
+            } else if (filtered.length > displayLimit) {
+                loadMoreContainer.classList.remove('hidden');
+            } else {
+                loadMoreContainer.classList.add('hidden');
+            }
+        }
+        
         let allWorks = [];
         let displayLimitWork = 8;
 
@@ -332,14 +393,14 @@
         
         document.getElementById('loadMoreBtn').addEventListener('click', () => {
             displayLimit += 8;
-            renderProducts();
+            renderFilteredProducts();
         });
         document.getElementById('loadMoreBtnWork').addEventListener('click', () => {
             displayLimitWork += 8;
             renderWorks();
         });
         // Re-render when language changes
-        window.addEventListener('languageChanged', renderProducts);
+        window.addEventListener('languageChanged', renderFilteredProducts);
         window.addEventListener('languageChanged', renderWorks);
 
         // Make openDetailsModal global
@@ -352,7 +413,7 @@
             
             document.getElementById('modalImage').src = product.image_url;
             document.getElementById('modalTitle').textContent = displayName;
-            document.getElementById('modalPrice').textContent = product.price ? '₹ ' + product.price : '';
+            document.getElementById('modalPrice').textContent = `₹ ${product.price || '0'}`;
             document.getElementById('modalDesc').textContent = displayDesc;
             
             const soldOutBadge = document.getElementById('modalSoldOut');
@@ -371,6 +432,7 @@
                         price: product.price ? parseInt(product.price) : 0,
                         image: product.image_url
                     });
+                    showToast("Added to cart!");
                     closeDetailsModal();
                 };
             }
@@ -394,7 +456,6 @@
             document.getElementById('modalDesc').textContent = currentLang === 'mr' && work.desc_mr ? work.desc_mr : work.desc_en;
             document.getElementById('modalSoldOut').classList.add('hidden');
             document.getElementById('buyNowBtn').classList.add('hidden');
-            document.getElementById('modalPrice').textContent = '';
             
             document.getElementById('detailsModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
@@ -408,6 +469,12 @@
     }
 </script>
 
+<!-- Toast Notification -->
+<div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-surface-container-highest text-on-surface border border-outline-variant px-6 py-3 rounded shadow-xl z-[200] hidden flex items-center gap-3 transition-opacity duration-300 opacity-0">
+    <span class="material-symbols-outlined text-primary">check_circle</span>
+    <span id="toast-msg" class="font-bold text-sm"></span>
+</div>
+
 <!-- Details Modal -->
 <div id="detailsModal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-[100] p-4">
     <div class="bg-surface rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative flex flex-col md:flex-row">
@@ -420,7 +487,7 @@
         <div class="md:w-1/2 w-full p-8 flex flex-col">
             <div id="modalSoldOut" class="hidden mb-4 self-start bg-error text-on-error font-bold text-label-sm px-3 py-1 rounded">SOLD OUT</div>
             <h2 id="modalTitle" class="font-headline-md text-3xl text-on-background mb-2"></h2>
-            <p id="modalPrice" class="text-primary font-bold text-xl mb-4"></p>
+            <p id="modalPrice" class="font-headline-sm text-2xl text-primary font-bold mb-4"></p>
             <p id="modalDesc" class="font-body-md text-on-surface-variant leading-relaxed mb-6"></p>
             <div class="mt-auto pt-4 border-t border-outline-variant flex gap-4">
                 <button id="buyNowBtn" class="bg-primary text-on-primary hover:opacity-90 px-6 py-3 rounded font-bold transition-opacity w-full flex items-center justify-center gap-2">
@@ -432,13 +499,8 @@
     </div>
 </div>
 
-<!-- Cart Backdrop -->
-<div id="cart-backdrop"></div>
-
-<!-- Toast Notification -->
-<div id="toast" class="toast"></div>
-
-<!-- Cart Drawer -->
+<!-- Cart Drawer & Backdrop -->
+<div id="cart-backdrop" class="fixed inset-0 bg-black/50 z-[140] hidden transition-opacity duration-300 opacity-0"></div>
 <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-surface shadow-2xl z-[150] transform translate-x-full transition-transform duration-300 flex flex-col">
     <div class="flex justify-between items-center p-6 border-b border-outline-variant">
         <h2 class="font-headline-md text-xl font-bold flex items-center gap-2">
@@ -517,6 +579,7 @@
         const cartBtn = document.getElementById('cart-btn');
         const closeCartBtn = document.getElementById('close-cart-btn');
         const cartDrawer = document.getElementById('cart-drawer');
+        const cartBackdrop = document.getElementById('cart-backdrop');
         const cartBadge = document.getElementById('cart-badge');
         const cartItemsContainer = document.getElementById('cart-items');
         const cartTotalEl = document.getElementById('cart-total');
@@ -537,9 +600,43 @@
                 cart.push({ ...item, quantity: 1 });
             }
             saveCart();
-            showToast('✅ ' + item.name + ' added to cart!');
+            openCart();
+        }
+
+        window.quickAddToCart = function(id) {
+            const product = allProducts.find(p => p.id === id);
+            if(product) {
+                addToCart({
+                    id: product.id,
+                    name: window.currentLang === 'mr' && product.name_mr ? product.name_mr : (product.name_en || product.name),
+                    price: product.price ? parseInt(product.price) : 0,
+                    image: product.image_url
+                });
+                showToast("Added to cart!");
+            }
+        }
+
+        window.showToast = function(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.remove('opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 2500);
+        }
+
+        function openCart() {
+            cartBackdrop.classList.remove('hidden');
+            setTimeout(() => cartBackdrop.classList.remove('opacity-0'), 10);
             cartDrawer.classList.remove('translate-x-full');
-            document.getElementById('cart-backdrop').classList.add('active');
+        }
+
+        function closeCart() {
+            cartDrawer.classList.add('translate-x-full');
+            cartBackdrop.classList.add('opacity-0');
+            setTimeout(() => cartBackdrop.classList.add('hidden'), 300);
         }
 
         window.removeFromCart = function(id) {
@@ -606,26 +703,9 @@
         }
 
         if (cartBtn && closeCartBtn && cartDrawer) {
-            cartBtn.addEventListener('click', () => {
-                cartDrawer.classList.remove('translate-x-full');
-                document.getElementById('cart-backdrop').classList.add('active');
-            });
-            closeCartBtn.addEventListener('click', () => {
-                cartDrawer.classList.add('translate-x-full');
-                document.getElementById('cart-backdrop').classList.remove('active');
-            });
-            document.getElementById('cart-backdrop').addEventListener('click', () => {
-                cartDrawer.classList.add('translate-x-full');
-                document.getElementById('cart-backdrop').classList.remove('active');
-            });
-        }
-
-        // Toast notification
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2500);
+            cartBtn.addEventListener('click', openCart);
+            closeCartBtn.addEventListener('click', closeCart);
+            cartBackdrop.addEventListener('click', closeCart);
         }
 
         // Checkout Logic
@@ -664,8 +744,7 @@
                     alert("Payment Successful!\\nPayment ID: " + response.razorpay_payment_id);
                     cart = []; // clear cart
                     saveCart();
-                    cartDrawer.classList.add('translate-x-full');
-                    document.getElementById('cart-backdrop').classList.remove('active');
+                    closeCart();
                     // Clear form
                     document.getElementById('cust_name').value = '';
                     document.getElementById('cust_email').value = '';
