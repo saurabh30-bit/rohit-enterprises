@@ -431,8 +431,14 @@
     <div id="cart-items" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
         <!-- Cart Items -->
     </div>
-    <div class="p-6 border-t border-outline-variant bg-surface-container-low">
-        <div class="flex justify-between font-bold text-lg mb-4">
+    <div class="p-6 border-t border-outline-variant bg-surface-container-low flex flex-col gap-4">
+        <div id="cart-error" class="hidden text-error text-sm font-bold bg-error-container p-2 rounded">Error: Total is ₹0. Ask admin to add prices.</div>
+        <div class="flex flex-col gap-2">
+            <input type="text" id="cust_name" placeholder="Full Name" required class="p-2 border rounded border-outline-variant text-sm">
+            <input type="email" id="cust_email" placeholder="Email" required class="p-2 border rounded border-outline-variant text-sm">
+            <input type="tel" id="cust_phone" placeholder="Phone Number" required class="p-2 border rounded border-outline-variant text-sm">
+        </div>
+        <div class="flex justify-between font-bold text-lg">
             <span>Total:</span>
             <span id="cart-total">₹ 0</span>
         </div>
@@ -586,10 +592,25 @@
             if (cart.length === 0) return;
             
             const totalInPaise = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0) * 100;
+            const errorEl = document.getElementById('cart-error');
+            
             if (totalInPaise === 0) {
-                alert("Cart total is zero. Cannot checkout.");
+                errorEl.textContent = "Error: Cart total is ₹0. Please ask the admin to add product prices.";
+                errorEl.classList.remove('hidden');
                 return;
             }
+            
+            const custName = document.getElementById('cust_name').value.trim();
+            const custEmail = document.getElementById('cust_email').value.trim();
+            const custPhone = document.getElementById('cust_phone').value.trim();
+            
+            if(!custName || !custEmail || !custPhone) {
+                errorEl.textContent = "Please fill in all your details (Name, Email, Phone).";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            
+            errorEl.classList.add('hidden');
 
             const options = {
                 "key": "rzp_test_YOUR_TEST_KEY", // Replace with real key in production
@@ -603,11 +624,15 @@
                     cart = []; // clear cart
                     saveCart();
                     cartDrawer.classList.add('translate-x-full');
+                    // Clear form
+                    document.getElementById('cust_name').value = '';
+                    document.getElementById('cust_email').value = '';
+                    document.getElementById('cust_phone').value = '';
                 },
                 "prefill": {
-                    "name": "",
-                    "email": "",
-                    "contact": ""
+                    "name": custName,
+                    "email": custEmail,
+                    "contact": custPhone
                 },
                 "theme": {
                     "color": "#111827"
