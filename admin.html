@@ -147,8 +147,10 @@
         <h2 class="font-headline-sm mb-6 text-primary">Upload New Product</h2>
         <form id="addProductForm" class="flex flex-col gap-4">
             <div class="flex flex-col gap-4">
-                <input type="text" id="p_name_en" placeholder="Product Name" required class="p-2 border rounded border-outline-variant">
-                <input type="text" id="p_desc_en" placeholder="Description" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="p_name_en" placeholder="Product Name (English)" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="p_name_mr" placeholder="Product Name (Marathi)" class="p-2 border rounded border-outline-variant">
+                <input type="text" id="p_desc_en" placeholder="Description (English)" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="p_desc_mr" placeholder="Description (Marathi)" class="p-2 border rounded border-outline-variant">
                 <input type="number" id="p_price" placeholder="Price (₹)" required min="0" class="p-2 border rounded border-outline-variant">
             </div>
             <select id="p_status" class="p-2 border rounded border-outline-variant">
@@ -182,8 +184,10 @@
         <form id="editProductForm" class="flex flex-col gap-4">
             <input type="hidden" id="e_id">
             <div class="flex flex-col gap-4">
-                <input type="text" id="e_name_en" placeholder="Product Name" required class="p-2 border rounded border-outline-variant">
-                <input type="text" id="e_desc_en" placeholder="Description" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="e_name_en" placeholder="Product Name (English)" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="e_name_mr" placeholder="Product Name (Marathi)" class="p-2 border rounded border-outline-variant">
+                <input type="text" id="e_desc_en" placeholder="Description (English)" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="e_desc_mr" placeholder="Description (Marathi)" class="p-2 border rounded border-outline-variant">
                 <input type="number" id="e_price" placeholder="Price (₹)" required min="0" class="p-2 border rounded border-outline-variant">
             </div>
             <select id="e_status" class="p-2 border rounded border-outline-variant">
@@ -214,8 +218,10 @@
         <h2 class="font-headline-sm mb-6 text-secondary">Upload New Work</h2>
         <form id="addWorkForm" class="flex flex-col gap-4">
             <div class="flex flex-col gap-4">
-                <input type="text" id="w_title_en" placeholder="Title" required class="p-2 border rounded border-outline-variant">
-                <input type="text" id="w_desc_en" placeholder="Description" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="w_title_en" placeholder="Title (English)" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="w_title_mr" placeholder="Title (Marathi)" class="p-2 border rounded border-outline-variant">
+                <input type="text" id="w_desc_en" placeholder="Description (English)" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="w_desc_mr" placeholder="Description (Marathi)" class="p-2 border rounded border-outline-variant">
             </div>
             <div class="flex items-center gap-4">
                 <select id="w_status" class="p-2 border rounded border-outline-variant flex-grow">
@@ -246,8 +252,10 @@
         <form id="editWorkForm" class="flex flex-col gap-4">
             <input type="hidden" id="ew_id">
             <div class="flex flex-col gap-4">
-                <input type="text" id="ew_title_en" placeholder="Title" required class="p-2 border rounded border-outline-variant">
-                <input type="text" id="ew_desc_en" placeholder="Description" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="ew_title_en" placeholder="Title (English)" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="ew_title_mr" placeholder="Title (Marathi)" class="p-2 border rounded border-outline-variant">
+                <input type="text" id="ew_desc_en" placeholder="Description (English)" required class="p-2 border rounded border-outline-variant">
+                <input type="text" id="ew_desc_mr" placeholder="Description (Marathi)" class="p-2 border rounded border-outline-variant">
             </div>
             <div class="flex items-center gap-4">
                 <select id="ew_status" class="p-2 border rounded border-outline-variant flex-grow">
@@ -443,7 +451,9 @@
                 const product = window.allProducts.find(p => p.id === id);
                 document.getElementById('e_id').value = id;
                 document.getElementById('e_name_en').value = product.name_en || product.name || '';
+                document.getElementById('e_name_mr').value = product.name_mr || '';
                 document.getElementById('e_desc_en').value = product.desc_en || product.sku || '';
+                document.getElementById('e_desc_mr').value = product.desc_mr || '';
                 document.getElementById('e_price').value = product.price || '';
                 document.getElementById('e_status').value = product.status;
                 document.getElementById('e_sold_out').checked = product.soldOut === true;
@@ -464,7 +474,9 @@
             const base64Image = await compressImage(document.getElementById('p_image').files[0]);
             const payload = {
                 name_en: document.getElementById('p_name_en').value,
+                name_mr: document.getElementById('p_name_mr').value,
                 desc_en: document.getElementById('p_desc_en').value,
+                desc_mr: document.getElementById('p_desc_mr').value,
                 price: document.getElementById('p_price').value,
                 status: document.getElementById('p_status').value,
                 soldOut: document.getElementById('p_sold_out').checked,
@@ -485,7 +497,9 @@
         const id = document.getElementById('e_id').value;
         const payload = {
             name_en: document.getElementById('e_name_en').value,
+            name_mr: document.getElementById('e_name_mr').value,
             desc_en: document.getElementById('e_desc_en').value,
+            desc_mr: document.getElementById('e_desc_mr').value,
             price: document.getElementById('e_price').value,
             status: document.getElementById('e_status').value,
             soldOut: document.getElementById('e_sold_out').checked,
@@ -576,7 +590,9 @@
                 const work = window.allWorks.find(w => w.id === id);
                 document.getElementById('ew_id').value = id;
                 document.getElementById('ew_title_en').value = work.title_en || '';
+                document.getElementById('ew_title_mr').value = work.title_mr || '';
                 document.getElementById('ew_desc_en').value = work.desc_en || '';
+                document.getElementById('ew_desc_mr').value = work.desc_mr || '';
                 document.getElementById('ew_status').value = work.status;
                 document.getElementById('ew_pinned').checked = work.pinned === true;
                 document.getElementById('editWorkModal').classList.remove('hidden');
@@ -595,7 +611,9 @@
             const base64Image = await compressImage(document.getElementById('w_image').files[0]);
             const payload = {
                 title_en: document.getElementById('w_title_en').value,
+                title_mr: document.getElementById('w_title_mr').value,
                 desc_en: document.getElementById('w_desc_en').value,
+                desc_mr: document.getElementById('w_desc_mr').value,
                 status: document.getElementById('w_status').value,
                 pinned: document.getElementById('w_pinned').checked,
                 image_url: base64Image,
@@ -614,7 +632,9 @@
         const id = document.getElementById('ew_id').value;
         const payload = {
             title_en: document.getElementById('ew_title_en').value,
+            title_mr: document.getElementById('ew_title_mr').value,
             desc_en: document.getElementById('ew_desc_en').value,
+            desc_mr: document.getElementById('ew_desc_mr').value,
             status: document.getElementById('ew_status').value,
             pinned: document.getElementById('ew_pinned').checked
         };
