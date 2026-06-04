@@ -534,16 +534,30 @@
     </div>
     <div class="p-6 border-t border-outline-variant bg-surface-container-low flex flex-col gap-4">
         <div id="cart-error" class="hidden text-error text-sm font-bold bg-error-container p-2 rounded">Error: Total is ₹0. Ask admin to add prices.</div>
-        <div class="flex flex-col gap-2">
-            <input type="text" id="cust_name" placeholder="Full Name" required class="p-2 border rounded border-outline-variant text-sm">
-            <input type="email" id="cust_email" placeholder="Email" required class="p-2 border rounded border-outline-variant text-sm">
-            <input type="tel" id="cust_phone" placeholder="Phone Number" required class="p-2 border rounded border-outline-variant text-sm">
+        
+        <!-- Step 1: Summary -->
+        <div id="cart-summary-step" class="flex flex-col gap-4">
+            <div class="flex justify-between font-bold text-lg">
+                <span>Total:</span>
+                <span id="cart-total">₹ 0</span>
+            </div>
+            <button id="proceedToCheckoutBtn" class="w-full bg-primary text-on-primary py-3 rounded font-bold hover:opacity-90 transition-opacity">Checkout securely</button>
         </div>
-        <div class="flex justify-between font-bold text-lg">
-            <span>Total:</span>
-            <span id="cart-total">₹ 0</span>
+
+        <!-- Step 2: User Info Form -->
+        <div id="cart-user-info-step" class="hidden flex-col gap-4">
+            <button id="backToCartBtn" class="text-sm font-bold text-primary flex items-center gap-1 hover:underline mb-2 w-fit">
+                <span class="material-symbols-outlined text-[16px]">arrow_back</span> Back to Cart
+            </button>
+            <div class="flex flex-col gap-2">
+                <input type="text" id="cust_name" placeholder="Full Name" required class="p-2 border rounded border-outline-variant text-sm">
+                <input type="email" id="cust_email" placeholder="Email" required class="p-2 border rounded border-outline-variant text-sm">
+                <input type="tel" id="cust_phone" placeholder="Phone Number" required class="p-2 border rounded border-outline-variant text-sm">
+            </div>
+            <button id="checkoutBtn" class="w-full bg-primary text-on-primary py-3 rounded font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                Pay Now <span id="cart-total-pay">₹ 0</span>
+            </button>
         </div>
-        <button id="checkoutBtn" class="w-full bg-primary text-on-primary py-3 rounded font-bold hover:opacity-90 transition-opacity">Checkout securely</button>
     </div>
 </div>
 
@@ -601,7 +615,12 @@
         const cartBadge = document.getElementById('cart-badge');
         const cartItemsContainer = document.getElementById('cart-items');
         const cartTotalEl = document.getElementById('cart-total');
+        const cartTotalPayEl = document.getElementById('cart-total-pay');
+        const proceedToCheckoutBtn = document.getElementById('proceedToCheckoutBtn');
         const checkoutBtn = document.getElementById('checkoutBtn');
+        const cartSummaryStep = document.getElementById('cart-summary-step');
+        const cartUserInfoStep = document.getElementById('cart-user-info-step');
+        const backToCartBtn = document.getElementById('backToCartBtn');
 
         let cart = JSON.parse(localStorage.getItem('pranav_cart')) || [];
 
@@ -654,7 +673,13 @@
         function closeCart() {
             cartDrawer.classList.add('translate-x-full');
             cartBackdrop.classList.add('opacity-0');
-            setTimeout(() => cartBackdrop.classList.add('hidden'), 300);
+            setTimeout(() => {
+                cartBackdrop.classList.add('hidden');
+                cartUserInfoStep.classList.add('hidden');
+                cartUserInfoStep.classList.remove('flex');
+                cartSummaryStep.classList.remove('hidden');
+                cartSummaryStep.classList.add('flex');
+            }, 300);
         }
 
         window.removeFromCart = function(id) {
@@ -681,11 +706,11 @@
 
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = '<p class="text-center text-on-surface-variant my-auto">Your cart is empty.</p>';
-                checkoutBtn.disabled = true;
-                checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                proceedToCheckoutBtn.disabled = true;
+                proceedToCheckoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
-                checkoutBtn.disabled = false;
-                checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                proceedToCheckoutBtn.disabled = false;
+                proceedToCheckoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 
                 cart.forEach(item => {
                     total += (item.price * item.quantity);
@@ -711,6 +736,7 @@
             }
 
             cartTotalEl.textContent = '₹ ' + total;
+            if(cartTotalPayEl) cartTotalPayEl.textContent = '₹ ' + total;
             
             if (count > 0) {
                 cartBadge.textContent = count;
@@ -727,7 +753,7 @@
         }
 
         // Checkout Logic
-        checkoutBtn.addEventListener('click', () => {
+        proceedToCheckoutBtn.addEventListener('click', () => {
             if (cart.length === 0) return;
             
             const totalInPaise = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0) * 100;
@@ -738,6 +764,26 @@
                 errorEl.classList.remove('hidden');
                 return;
             }
+            errorEl.classList.add('hidden');
+            cartSummaryStep.classList.add('hidden');
+            cartSummaryStep.classList.remove('flex');
+            cartUserInfoStep.classList.remove('hidden');
+            cartUserInfoStep.classList.add('flex');
+        });
+
+        backToCartBtn.addEventListener('click', () => {
+            cartUserInfoStep.classList.add('hidden');
+            cartUserInfoStep.classList.remove('flex');
+            cartSummaryStep.classList.remove('hidden');
+            cartSummaryStep.classList.add('flex');
+        });
+
+        // Pay Now Logic
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) return;
+            
+            const totalInPaise = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0) * 100;
+            const errorEl = document.getElementById('cart-error');
             
             const custName = document.getElementById('cust_name').value.trim();
             const custEmail = document.getElementById('cust_email').value.trim();
