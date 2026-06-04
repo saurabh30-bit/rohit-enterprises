@@ -63,6 +63,7 @@
 <div class="flex gap-6 mb-8 border-b border-outline-variant">
    <button id="tabProducts" class="pb-2 border-b-2 border-primary text-primary font-bold transition-all text-lg" data-i18n="Products">Products</button>
    <button id="tabWorks" class="pb-2 text-on-surface-variant font-bold transition-all text-lg hover:text-primary" data-i18n="Work">Work</button>
+   <button id="tabOrders" class="pb-2 text-on-surface-variant font-bold transition-all text-lg hover:text-primary">Orders</button>
 </div>
 
 <!-- PRODUCTS SECTION -->
@@ -133,6 +134,29 @@
         </div>
         <div id="workRows" class="overflow-y-auto max-h-[60vh] pr-2"></div>
     </div>
+    </div>
+</div>
+
+<!-- ORDERS SECTION -->
+<div id="sectionOrders" class="hidden">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-12">
+        <div class="bg-surface p-8 border border-outline-variant rounded hover:shadow-md transition-all duration-300">
+            <div class="flex justify-between items-start mb-4">
+                <span class="material-symbols-outlined text-primary text-3xl">receipt_long</span>
+                <span class="text-on-primary-container bg-primary-container px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">All</span>
+            </div>
+            <p class="font-label-md text-label-md text-on-surface-variant mb-1">Total Orders</p>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface" id="totalOrdersCount">Loading...</h3>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 gap-4">
+        <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant text-on-surface-variant font-label-md text-label-md">
+            <div class="col-span-3">DATE & ID</div>
+            <div class="col-span-4">CUSTOMER INFO</div>
+            <div class="col-span-3">ITEMS</div>
+            <div class="col-span-2 text-right">TOTAL</div>
+        </div>
+        <div id="orderRows" class="overflow-y-auto max-h-[60vh] pr-2"></div>
     </div>
 </div>
 
@@ -285,9 +309,10 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    let activeTab = 'products'; // 'products' or 'works'
+    let activeTab = 'products'; // 'products', 'works', 'orders'
     window.allProducts = [];
     window.allWorks = [];
+    window.allOrders = [];
 
     onAuthStateChanged(auth, (user) => {
         if (!user) {
@@ -297,6 +322,7 @@
             document.getElementById('adminContent').classList.remove('hidden');
             fetchProducts();
             fetchWorks();
+            fetchOrders();
         }
     });
 
@@ -307,30 +333,35 @@
     // Tab Switching
     document.getElementById('tabProducts').addEventListener('click', () => switchTab('products'));
     document.getElementById('tabWorks').addEventListener('click', () => switchTab('works'));
+    document.getElementById('tabOrders').addEventListener('click', () => switchTab('orders'));
 
     function switchTab(tab) {
         activeTab = tab;
-        const tp = document.getElementById('tabProducts');
-        const tw = document.getElementById('tabWorks');
-        if (tab === 'products') {
-            tp.classList.add('border-b-2', 'border-primary', 'text-primary');
-            tp.classList.remove('text-on-surface-variant');
-            tw.classList.remove('border-b-2', 'border-primary', 'text-primary');
-            tw.classList.add('text-on-surface-variant');
-            document.getElementById('sectionProducts').classList.remove('hidden');
-            document.getElementById('sectionWorks').classList.add('hidden');
-            document.getElementById('addBtn').classList.remove('hidden');
-            document.getElementById('addWorkBtn').classList.add('hidden');
-        } else {
-            tw.classList.add('border-b-2', 'border-primary', 'text-primary');
-            tw.classList.remove('text-on-surface-variant');
-            tp.classList.remove('border-b-2', 'border-primary', 'text-primary');
-            tp.classList.add('text-on-surface-variant');
-            document.getElementById('sectionWorks').classList.remove('hidden');
-            document.getElementById('sectionProducts').classList.add('hidden');
-            document.getElementById('addWorkBtn').classList.remove('hidden');
-            document.getElementById('addBtn').classList.add('hidden');
-        }
+        const tabs = {
+            'products': document.getElementById('tabProducts'),
+            'works': document.getElementById('tabWorks'),
+            'orders': document.getElementById('tabOrders')
+        };
+        const sections = {
+            'products': document.getElementById('sectionProducts'),
+            'works': document.getElementById('sectionWorks'),
+            'orders': document.getElementById('sectionOrders')
+        };
+        
+        Object.keys(tabs).forEach(k => {
+            if (k === tab) {
+                tabs[k].classList.add('border-b-2', 'border-primary', 'text-primary');
+                tabs[k].classList.remove('text-on-surface-variant');
+                sections[k].classList.remove('hidden');
+            } else {
+                tabs[k].classList.remove('border-b-2', 'border-primary', 'text-primary');
+                tabs[k].classList.add('text-on-surface-variant');
+                sections[k].classList.add('hidden');
+            }
+        });
+
+        document.getElementById('addBtn').classList.toggle('hidden', tab !== 'products');
+        document.getElementById('addWorkBtn').classList.toggle('hidden', tab !== 'works');
     }
 
     const compressImage = (file) => {
@@ -643,6 +674,62 @@
         document.getElementById('editWorkForm').reset();
         fetchWorks();
     });
+
+    // --- ORDERS ---
+    async function fetchOrders() {
+        try {
+            const q = query(collection(db, "orders"));
+            const querySnapshot = await getDocs(q);
+            const orders = [];
+            querySnapshot.forEach((doc) => orders.push({ id: doc.id, ...doc.data() }));
+            orders.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+            window.allOrders = orders;
+            document.getElementById('totalOrdersCount').innerText = orders.length;
+            renderOrders();
+        } catch (error) { console.error("Error fetching orders:", error); }
+    }
+
+    function renderOrders() {
+        const container = document.getElementById('orderRows');
+        container.innerHTML = '';
+        if(window.allOrders.length === 0) {
+            container.innerHTML = '<p class="p-6 text-center text-on-surface-variant">No orders found.</p>';
+            return;
+        }
+
+        window.allOrders.forEach(o => {
+            const row = document.createElement('div');
+            row.className = 'grid grid-cols-1 md:grid-cols-12 gap-4 items-center px-6 py-6 bg-white border border-outline-variant rounded hover:border-primary transition-all mb-4';
+
+            const dateStr = new Date(o.dateAdded).toLocaleString();
+            let itemsHtml = '<ul class="list-disc list-inside text-xs">';
+            if(o.items && Array.isArray(o.items)) {
+                o.items.forEach(item => {
+                    itemsHtml += `<li>${item.quantity}x ${item.name} (₹${item.price})</li>`;
+                });
+            }
+            itemsHtml += '</ul>';
+
+            row.innerHTML = `
+                <div class="col-span-1 md:col-span-3">
+                    <div class="font-bold text-sm text-on-surface">${dateStr}</div>
+                    <div class="text-xs text-on-surface-variant mt-1 font-mono">ID: ${o.paymentId || o.id}</div>
+                </div>
+                <div class="col-span-1 md:col-span-4">
+                    <div class="font-bold text-sm text-on-surface">${o.customerName || 'N/A'}</div>
+                    <div class="text-xs text-on-surface-variant">${o.customerEmail || 'N/A'} | ${o.customerPhone || 'N/A'}</div>
+                    <div class="text-xs text-on-surface-variant mt-1 italic">${o.customerAddress || 'N/A'}</div>
+                </div>
+                <div class="col-span-1 md:col-span-3 text-on-surface-variant">
+                    ${itemsHtml}
+                </div>
+                <div class="col-span-1 md:col-span-2 text-left md:text-right font-bold text-primary text-lg">
+                    ₹ ${o.totalAmount || 0}
+                </div>
+            `;
+            container.appendChild(row);
+        });
+    }
 
     window.addEventListener('languageChanged', () => {
         if(window.allProducts.length > 0) renderProducts();
