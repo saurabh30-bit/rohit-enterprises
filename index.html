@@ -428,14 +428,14 @@
                 addToCartBtn.classList.remove('hidden');
                 
                 buyNowBtn.onclick = function() {
-                    addToCart({
+                    localStorage.setItem('pranav_buy_now', JSON.stringify({
                         id: product.id,
                         name: displayName,
                         price: product.price ? parseInt(product.price) : 0,
-                        image: product.image_url
-                    });
-                    closeDetailsModal();
-                    openCart(); // Immediately open cart for Buy Now
+                        image: product.image_url,
+                        quantity: 1
+                    }));
+                    window.location.href = '/checkout.html?mode=buy_now';
                 };
 
                 addToCartBtn.onclick = function() {
@@ -541,22 +541,7 @@
                 <span>Total:</span>
                 <span id="cart-total">₹ 0</span>
             </div>
-            <button id="proceedToCheckoutBtn" class="w-full bg-primary text-on-primary py-3 rounded font-bold hover:opacity-90 transition-opacity">Checkout securely</button>
-        </div>
-
-        <!-- Step 2: User Info Form -->
-        <div id="cart-user-info-step" class="hidden flex-col gap-4">
-            <button id="backToCartBtn" class="text-sm font-bold text-primary flex items-center gap-1 hover:underline mb-2 w-fit">
-                <span class="material-symbols-outlined text-[16px]">arrow_back</span> Back to Cart
-            </button>
-            <div class="flex flex-col gap-2">
-                <input type="text" id="cust_name" placeholder="Full Name" required class="p-2 border rounded border-outline-variant text-sm">
-                <input type="email" id="cust_email" placeholder="Email" required class="p-2 border rounded border-outline-variant text-sm">
-                <input type="tel" id="cust_phone" placeholder="Phone Number" required class="p-2 border rounded border-outline-variant text-sm">
-            </div>
-            <button id="checkoutBtn" class="w-full bg-primary text-on-primary py-3 rounded font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-                Pay Now <span id="cart-total-pay">₹ 0</span>
-            </button>
+            <a href="/checkout.html?mode=cart" id="proceedToCheckoutBtn" class="w-full bg-primary text-on-primary py-3 rounded font-bold hover:opacity-90 transition-opacity text-center block">Checkout securely</a>
         </div>
     </div>
 </div>
@@ -612,15 +597,9 @@
         const closeCartBtn = document.getElementById('close-cart-btn');
         const cartDrawer = document.getElementById('cart-drawer');
         const cartBackdrop = document.getElementById('cart-backdrop');
-        const cartBadge = document.getElementById('cart-badge');
         const cartItemsContainer = document.getElementById('cart-items');
         const cartTotalEl = document.getElementById('cart-total');
-        const cartTotalPayEl = document.getElementById('cart-total-pay');
         const proceedToCheckoutBtn = document.getElementById('proceedToCheckoutBtn');
-        const checkoutBtn = document.getElementById('checkoutBtn');
-        const cartSummaryStep = document.getElementById('cart-summary-step');
-        const cartUserInfoStep = document.getElementById('cart-user-info-step');
-        const backToCartBtn = document.getElementById('backToCartBtn');
 
         let cart = JSON.parse(localStorage.getItem('pranav_cart')) || [];
 
@@ -675,10 +654,6 @@
             cartBackdrop.classList.add('opacity-0');
             setTimeout(() => {
                 cartBackdrop.classList.add('hidden');
-                cartUserInfoStep.classList.add('hidden');
-                cartUserInfoStep.classList.remove('flex');
-                cartSummaryStep.classList.remove('hidden');
-                cartSummaryStep.classList.add('flex');
             }, 300);
         }
 
@@ -736,7 +711,6 @@
             }
 
             cartTotalEl.textContent = '₹ ' + total;
-            if(cartTotalPayEl) cartTotalPayEl.textContent = '₹ ' + total;
             
             if (count > 0) {
                 cartBadge.textContent = count;
@@ -752,82 +726,21 @@
             cartBackdrop.addEventListener('click', closeCart);
         }
 
-        // Checkout Logic
-        proceedToCheckoutBtn.addEventListener('click', () => {
-            if (cart.length === 0) return;
-            
+        // Checkout navigation handled by href on link. But we need to prevent default if empty
+        proceedToCheckoutBtn.addEventListener('click', (e) => {
+            if (cart.length === 0) {
+                e.preventDefault();
+                return;
+            }
             const totalInPaise = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0) * 100;
             const errorEl = document.getElementById('cart-error');
-            
             if (totalInPaise === 0) {
+                e.preventDefault();
                 errorEl.textContent = "Error: Cart total is ₹0. Please ask the admin to add product prices.";
                 errorEl.classList.remove('hidden');
-                return;
+            } else {
+                errorEl.classList.add('hidden');
             }
-            errorEl.classList.add('hidden');
-            cartSummaryStep.classList.add('hidden');
-            cartSummaryStep.classList.remove('flex');
-            cartUserInfoStep.classList.remove('hidden');
-            cartUserInfoStep.classList.add('flex');
-        });
-
-        backToCartBtn.addEventListener('click', () => {
-            cartUserInfoStep.classList.add('hidden');
-            cartUserInfoStep.classList.remove('flex');
-            cartSummaryStep.classList.remove('hidden');
-            cartSummaryStep.classList.add('flex');
-        });
-
-        // Pay Now Logic
-        checkoutBtn.addEventListener('click', () => {
-            if (cart.length === 0) return;
-            
-            const totalInPaise = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0) * 100;
-            const errorEl = document.getElementById('cart-error');
-            
-            const custName = document.getElementById('cust_name').value.trim();
-            const custEmail = document.getElementById('cust_email').value.trim();
-            const custPhone = document.getElementById('cust_phone').value.trim();
-            
-            if(!custName || !custEmail || !custPhone) {
-                errorEl.textContent = "Please fill in all your details (Name, Email, Phone).";
-                errorEl.classList.remove('hidden');
-                return;
-            }
-            
-            errorEl.classList.add('hidden');
-
-            const options = {
-                "key": "rzp_test_SxRSzx7YqHMOP6", // User's Test Key ID
-                "amount": totalInPaise.toString(),
-                "currency": "INR",
-                "name": "Pranav Enterprises",
-                "description": "Store Checkout",
-                "image": "/logo.png",
-                "handler": function (response){
-                    alert("Payment Successful!\\nPayment ID: " + response.razorpay_payment_id);
-                    cart = []; // clear cart
-                    saveCart();
-                    closeCart();
-                    // Clear form
-                    document.getElementById('cust_name').value = '';
-                    document.getElementById('cust_email').value = '';
-                    document.getElementById('cust_phone').value = '';
-                },
-                "prefill": {
-                    "name": custName,
-                    "email": custEmail,
-                    "contact": custPhone
-                },
-                "theme": {
-                    "color": "#111827"
-                }
-            };
-            const rzp = new Razorpay(options);
-            rzp.on('payment.failed', function (response){
-                alert("Payment Failed!\\nReason: " + response.error.description);
-            });
-            rzp.open();
         });
 
         // initial render
