@@ -149,6 +149,7 @@
             <div class="flex flex-col gap-4">
                 <input type="text" id="p_name_en" placeholder="Product Name" required class="p-2 border rounded border-outline-variant">
                 <input type="text" id="p_desc_en" placeholder="Description" required class="p-2 border rounded border-outline-variant">
+                <input type="number" id="p_price" placeholder="Price (₹)" required min="0" class="p-2 border rounded border-outline-variant">
             </div>
             <select id="p_status" class="p-2 border rounded border-outline-variant">
                 <option value="Published">Published</option>
@@ -183,6 +184,7 @@
             <div class="flex flex-col gap-4">
                 <input type="text" id="e_name_en" placeholder="Product Name" required class="p-2 border rounded border-outline-variant">
                 <input type="text" id="e_desc_en" placeholder="Description" required class="p-2 border rounded border-outline-variant">
+                <input type="number" id="e_price" placeholder="Price (₹)" required min="0" class="p-2 border rounded border-outline-variant">
             </div>
             <select id="e_status" class="p-2 border rounded border-outline-variant">
                 <option value="Published">Published</option>
@@ -404,6 +406,7 @@
                             ${p.pinned ? '<span class="material-symbols-outlined text-[16px] text-primary ml-1" title="Pinned">push_pin</span>' : ''}
                         </h4>
                         <p class="font-body-sm text-body-sm text-on-surface-variant truncate">${displayDesc}</p>
+                        <p class="font-body-sm text-primary font-bold mt-1">₹ ${p.price || '0'}</p>
                     </div>
                 </div>
                 <div class="col-span-1 md:col-span-3 flex flex-col items-start md:items-center justify-center gap-1 mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-t-0">
@@ -441,6 +444,7 @@
                 document.getElementById('e_id').value = id;
                 document.getElementById('e_name_en').value = product.name_en || product.name || '';
                 document.getElementById('e_desc_en').value = product.desc_en || product.sku || '';
+                document.getElementById('e_price').value = product.price || '';
                 document.getElementById('e_status').value = product.status;
                 document.getElementById('e_sold_out').checked = product.soldOut === true;
                 document.getElementById('e_pinned').checked = product.pinned === true;
@@ -461,6 +465,7 @@
             const payload = {
                 name_en: document.getElementById('p_name_en').value,
                 desc_en: document.getElementById('p_desc_en').value,
+                price: document.getElementById('p_price').value,
                 status: document.getElementById('p_status').value,
                 soldOut: document.getElementById('p_sold_out').checked,
                 pinned: document.getElementById('p_pinned').checked,
@@ -481,6 +486,7 @@
         const payload = {
             name_en: document.getElementById('e_name_en').value,
             desc_en: document.getElementById('e_desc_en').value,
+            price: document.getElementById('e_price').value,
             status: document.getElementById('e_status').value,
             soldOut: document.getElementById('e_sold_out').checked,
             pinned: document.getElementById('e_pinned').checked

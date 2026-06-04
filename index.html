@@ -67,6 +67,10 @@
         <button id="lang-en" class="relative z-10 w-1/2 h-full flex items-center justify-center text-[13px] font-medium transition-colors cursor-pointer text-on-primary">English</button>
         <button id="lang-mr" class="relative z-10 w-1/2 h-full flex items-center justify-center text-[13px] font-medium transition-colors cursor-pointer text-on-surface-variant">मराठी</button>
     </div>
+    <button id="cart-btn" class="p-1 text-on-surface hover:text-primary transition-colors relative">
+        <span class="material-symbols-outlined text-3xl">shopping_cart</span>
+        <span id="cart-badge" class="absolute -top-1 -right-1 bg-error text-on-error text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+    </button>
     <button id="menu-btn" class="p-1 text-on-surface hover:text-primary transition-colors">
         <span class="material-symbols-outlined text-3xl">more_vert</span>
     </button>
@@ -220,7 +224,8 @@
                         ${soldOutBadge}
                         <img class="${imgClass}" src="${p.image_url}" alt="${displayName}"/>
                     </div>
-                    <h3 class="font-headline-sm text-headline-sm text-on-background mb-1 md:mb-4 text-sm md:text-xl truncate">${displayName}</h3>
+                    <h3 class="font-headline-sm text-headline-sm text-on-background mb-1 md:mb-2 text-sm md:text-xl truncate">${displayName}</h3>
+                    <p class="font-body-md text-primary font-bold mb-4">₹ ${p.price || '0'}</p>
                     <button class="mt-auto border border-outline text-on-surface hover:bg-surface-variant py-2 px-4 rounded text-label-md font-label-md transition-colors w-full" onclick="openDetailsModal('${p.id}')">${detailsText}</button>
                 `;
                 grid.appendChild(card);
@@ -347,32 +352,13 @@
                 soldOutBadge.classList.add('hidden');
                 buyNowBtn.classList.remove('hidden');
                 buyNowBtn.onclick = function() {
-                    const priceInPaise = product.price ? parseInt(product.price) * 100 : 50000; // Default ₹500
-                    const options = {
-                        "key": "rzp_test_YOUR_TEST_KEY", // Replace with real key in production
-                        "amount": priceInPaise.toString(),
-                        "currency": "INR",
-                        "name": "Pranav Enterprises",
-                        "description": "Purchase " + displayName,
-                        "image": "/logo.png",
-                        "handler": function (response){
-                            alert("Payment Successful!\nPayment ID: " + response.razorpay_payment_id);
-                            closeDetailsModal();
-                        },
-                        "prefill": {
-                            "name": "",
-                            "email": "",
-                            "contact": ""
-                        },
-                        "theme": {
-                            "color": "#111827"
-                        }
-                    };
-                    const rzp = new Razorpay(options);
-                    rzp.on('payment.failed', function (response){
-                        alert("Payment Failed!\nReason: " + response.error.description);
+                    addToCart({
+                        id: product.id,
+                        name: displayName,
+                        price: product.price ? parseInt(product.price) : 0,
+                        image: product.image_url
                     });
-                    rzp.open();
+                    closeDetailsModal();
                 };
             }
 
@@ -423,11 +409,34 @@
             <p id="modalDesc" class="font-body-md text-on-surface-variant leading-relaxed mb-6"></p>
             <div class="mt-auto pt-4 border-t border-outline-variant flex gap-4">
                 <button id="buyNowBtn" class="bg-primary text-on-primary hover:opacity-90 px-6 py-3 rounded font-bold transition-opacity w-full flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined">shopping_cart</span>
-                    Pay Now (Buy)
+                    <span class="material-symbols-outlined">add_shopping_cart</span>
+                    Add to Cart
                 </button>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Cart Drawer -->
+<div id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-surface shadow-2xl z-[150] transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="flex justify-between items-center p-6 border-b border-outline-variant">
+        <h2 class="font-headline-md text-xl font-bold flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">shopping_cart</span>
+            Your Cart
+        </h2>
+        <button id="close-cart-btn" class="text-on-surface hover:text-error transition-colors">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+    <div id="cart-items" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
+        <!-- Cart Items -->
+    </div>
+    <div class="p-6 border-t border-outline-variant bg-surface-container-low">
+        <div class="flex justify-between font-bold text-lg mb-4">
+            <span>Total:</span>
+            <span id="cart-total">₹ 0</span>
+        </div>
+        <button id="checkoutBtn" class="w-full bg-primary text-on-primary py-3 rounded font-bold hover:opacity-90 transition-opacity">Checkout securely</button>
     </div>
 </div>
 
@@ -476,6 +485,143 @@
                 });
             });
         }
+
+        // --- CART LOGIC ---
+        const cartBtn = document.getElementById('cart-btn');
+        const closeCartBtn = document.getElementById('close-cart-btn');
+        const cartDrawer = document.getElementById('cart-drawer');
+        const cartBadge = document.getElementById('cart-badge');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalEl = document.getElementById('cart-total');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+
+        let cart = JSON.parse(localStorage.getItem('pranav_cart')) || [];
+
+        function saveCart() {
+            localStorage.setItem('pranav_cart', JSON.stringify(cart));
+            renderCart();
+        }
+
+        window.addToCart = function(item) {
+            const existing = cart.find(i => i.id === item.id);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            saveCart();
+            cartDrawer.classList.remove('translate-x-full');
+        }
+
+        window.removeFromCart = function(id) {
+            cart = cart.filter(i => i.id !== id);
+            saveCart();
+        }
+
+        window.updateQuantity = function(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    removeFromCart(id);
+                } else {
+                    saveCart();
+                }
+            }
+        }
+
+        function renderCart() {
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            let count = 0;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p class="text-center text-on-surface-variant my-auto">Your cart is empty.</p>';
+                checkoutBtn.disabled = true;
+                checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                checkoutBtn.disabled = false;
+                checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                
+                cart.forEach(item => {
+                    total += (item.price * item.quantity);
+                    count += item.quantity;
+                    
+                    const el = document.createElement('div');
+                    el.className = 'flex gap-4 border-b border-outline-variant pb-4';
+                    el.innerHTML = `
+                        <img src="${item.image}" class="w-20 h-20 object-cover rounded bg-surface-container-low" />
+                        <div class="flex-1 flex flex-col">
+                            <h4 class="font-bold text-sm text-on-surface line-clamp-2">${item.name}</h4>
+                            <p class="text-primary font-bold text-sm mt-1">₹ ${item.price}</p>
+                            <div class="flex items-center gap-3 mt-auto">
+                                <button onclick="updateQuantity('${item.id}', -1)" class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center hover:bg-outline-variant text-on-surface">-</button>
+                                <span class="text-sm font-bold">${item.quantity}</span>
+                                <button onclick="updateQuantity('${item.id}', 1)" class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center hover:bg-outline-variant text-on-surface">+</button>
+                                <button onclick="removeFromCart('${item.id}')" class="ml-auto text-error hover:text-red-700 text-sm">Remove</button>
+                            </div>
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(el);
+                });
+            }
+
+            cartTotalEl.textContent = '₹ ' + total;
+            
+            if (count > 0) {
+                cartBadge.textContent = count;
+                cartBadge.classList.remove('hidden');
+            } else {
+                cartBadge.classList.add('hidden');
+            }
+        }
+
+        if (cartBtn && closeCartBtn && cartDrawer) {
+            cartBtn.addEventListener('click', () => cartDrawer.classList.remove('translate-x-full'));
+            closeCartBtn.addEventListener('click', () => cartDrawer.classList.add('translate-x-full'));
+        }
+
+        // Checkout Logic
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) return;
+            
+            const totalInPaise = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0) * 100;
+            if (totalInPaise === 0) {
+                alert("Cart total is zero. Cannot checkout.");
+                return;
+            }
+
+            const options = {
+                "key": "rzp_test_YOUR_TEST_KEY", // Replace with real key in production
+                "amount": totalInPaise.toString(),
+                "currency": "INR",
+                "name": "Pranav Enterprises",
+                "description": "Store Checkout",
+                "image": "/logo.png",
+                "handler": function (response){
+                    alert("Payment Successful!\\nPayment ID: " + response.razorpay_payment_id);
+                    cart = []; // clear cart
+                    saveCart();
+                    cartDrawer.classList.add('translate-x-full');
+                },
+                "prefill": {
+                    "name": "",
+                    "email": "",
+                    "contact": ""
+                },
+                "theme": {
+                    "color": "#111827"
+                }
+            };
+            const rzp = new Razorpay(options);
+            rzp.on('payment.failed', function (response){
+                alert("Payment Failed!\\nReason: " + response.error.description);
+            });
+            rzp.open();
+        });
+
+        // initial render
+        renderCart();
     });
 </script>
 
