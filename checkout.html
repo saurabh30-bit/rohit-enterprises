@@ -193,27 +193,69 @@
             items = JSON.parse(localStorage.getItem('pranav_cart')) || [];
         }
 
-        if (items.length === 0) {
-            orderItemsContainer.innerHTML = '<p class="text-on-surface-variant">Your order is empty.</p>';
-            payNowBtn.disabled = true;
-            payNowBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        } else {
-            items.forEach(item => {
-                total += (item.price * item.quantity);
-                const el = document.createElement('div');
-                el.className = 'flex gap-4 border-b border-outline-variant pb-4 items-center';
-                el.innerHTML = `
-                    <img src="${item.image}" class="w-16 h-16 object-cover rounded shadow-sm bg-surface-container" />
-                    <div class="flex-1">
-                        <h4 class="font-bold text-sm text-on-surface line-clamp-1">${item.name}</h4>
-                        <p class="text-xs text-on-surface-variant mt-1">Qty: ${item.quantity}</p>
-                    </div>
-                    <div class="font-bold text-primary">₹ ${item.price * item.quantity}</div>
-                `;
-                orderItemsContainer.appendChild(el);
-            });
-            orderTotalEl.textContent = '₹ ' + total;
+        function saveAndRender() {
+            if (mode === 'buy_now') {
+                if (items.length > 0) {
+                    localStorage.setItem('pranav_buy_now', JSON.stringify(items[0]));
+                } else {
+                    localStorage.removeItem('pranav_buy_now');
+                }
+            } else {
+                localStorage.setItem('pranav_cart', JSON.stringify(items));
+            }
+            renderItems();
         }
+
+        window.updateQty = function(id, delta) {
+            const item = items.find(i => i.id === id);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    items = items.filter(i => i.id !== id);
+                }
+                saveAndRender();
+            }
+        };
+
+        function renderItems() {
+            orderItemsContainer.innerHTML = '';
+            total = 0;
+
+            if (items.length === 0) {
+                orderItemsContainer.innerHTML = `
+                    <div class="text-center py-6">
+                        <p class="text-on-surface-variant mb-4">Your order is empty.</p>
+                        <a href="/index.html" class="inline-block px-6 py-2 bg-primary text-on-primary font-bold rounded-lg hover:opacity-90 transition-opacity">Continue Shopping</a>
+                    </div>`;
+                payNowBtn.disabled = true;
+                payNowBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                orderTotalEl.textContent = '₹ 0';
+            } else {
+                payNowBtn.disabled = false;
+                payNowBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                items.forEach(item => {
+                    total += (item.price * item.quantity);
+                    const el = document.createElement('div');
+                    el.className = 'flex gap-4 border-b border-outline-variant pb-4 items-center';
+                    el.innerHTML = `
+                        <img src="${item.image}" class="w-16 h-16 object-cover rounded shadow-sm bg-surface-container" />
+                        <div class="flex-1">
+                            <h4 class="font-bold text-sm text-on-surface line-clamp-1">${item.name}</h4>
+                            <div class="flex items-center gap-3 mt-2">
+                                <button onclick="updateQty('${item.id}', -1)" class="w-6 h-6 rounded-full bg-surface flex items-center justify-center border border-outline hover:bg-surface-variant transition-colors">-</button>
+                                <span class="text-sm font-bold w-4 text-center">${item.quantity}</span>
+                                <button onclick="updateQty('${item.id}', 1)" class="w-6 h-6 rounded-full bg-surface flex items-center justify-center border border-outline hover:bg-surface-variant transition-colors">+</button>
+                            </div>
+                        </div>
+                        <div class="font-bold text-primary">₹ ${item.price * item.quantity}</div>
+                    `;
+                    orderItemsContainer.appendChild(el);
+                });
+                orderTotalEl.textContent = '₹ ' + total;
+            }
+        }
+
+        renderItems();
 
         payNowBtn.addEventListener('click', () => {
             if (items.length === 0) return;
@@ -245,12 +287,11 @@
                 "description": "Purchase Transaction",
                 "image": "https://enterprise-app-ebon.vercel.app/logo.png",
                 "handler": function (response){
-                    alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
                     if (mode !== 'buy_now') {
                         localStorage.removeItem('pranav_cart');
                     }
                     localStorage.removeItem('pranav_buy_now');
-                    window.location.href = '/index.html';
+                    window.location.href = '/success.html?payment_id=' + encodeURIComponent(response.razorpay_payment_id);
                 },
                 "prefill": {
                     "name": custName,
