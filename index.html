@@ -69,6 +69,9 @@
         <button id="lang-en" class="relative z-10 w-1/2 h-full flex items-center justify-center text-[13px] font-medium transition-colors cursor-pointer text-on-primary">English</button>
         <button id="lang-mr" class="relative z-10 w-1/2 h-full flex items-center justify-center text-[13px] font-medium transition-colors cursor-pointer text-on-surface-variant">मराठी</button>
     </div>
+    <a href="/track.html" class="hidden sm:flex p-1 text-on-surface hover:text-primary transition-colors" title="Track Order">
+        <span class="material-symbols-outlined text-[28px]">local_shipping</span>
+    </a>
     <button id="cart-btn" class="p-1 text-on-surface hover:text-primary transition-colors relative">
         <span class="material-symbols-outlined text-3xl">shopping_cart</span>
         <span id="cart-badge" class="absolute -top-1 -right-1 bg-error text-on-error text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
@@ -172,6 +175,27 @@
                         </p>
 </div>
 </div>
+</div>
+</section>
+
+<!-- Track Your Order Section -->
+<section class="py-16 bg-surface border-t border-outline-variant">
+<div class="px-4 md:px-margin-desktop max-w-container-max mx-auto">
+    <div class="bg-on-background rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-primary text-3xl">local_shipping</span>
+            </div>
+            <div>
+                <h3 class="text-xl md:text-2xl font-bold text-surface" data-i18n="Track Your Order">Track Your Order</h3>
+                <p class="text-surface/70 text-sm mt-1" data-i18n="Track Desc">Enter your Order ID and phone number to check delivery status</p>
+            </div>
+        </div>
+        <a href="/track.html" class="bg-primary text-on-primary px-8 py-3.5 rounded-lg font-bold text-label-md hover:opacity-90 transition-opacity flex items-center gap-2 whitespace-nowrap shadow-lg">
+            <span class="material-symbols-outlined">search</span>
+            Track Now
+        </a>
+    </div>
 </div>
 </section>
 
@@ -567,6 +591,7 @@
         <a href="/about.html" class="hover:text-primary transition-colors" data-i18n="About">About</a>
         <a href="#productGrid" class="hover:text-primary transition-colors" data-i18n="Our Collection">Our Collection</a>
         <a href="#workGrid" class="hover:text-primary transition-colors" data-i18n="Our Work">Our Work</a>
+        <a href="/track.html" class="hover:text-primary transition-colors text-primary font-bold">Track Order</a>
         <a href="#" class="hover:text-primary transition-colors" data-i18n="Contact Us">Contact Us</a>
     </div>
 </div>

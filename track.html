@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Track Order | Pranav Enterprises</title>
+<link rel="stylesheet" href="/output.css">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #f7f9fb;
+            color: #191c1e;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden flex flex-col min-h-screen">
+
+<!-- TopNavBar Component -->
+<header class="w-full top-0 sticky z-50 bg-surface dark:bg-on-background border-b border-outline-variant dark:border-outline">
+<nav class="flex justify-between items-center h-16 px-4 md:px-margin-desktop max-w-container-max mx-auto">
+<div class="flex items-center gap-4">
+<img src="/logo.png" alt="R Logo" class="w-9 h-9 rounded-full object-cover shadow-sm"/>
+<div class="flex items-center gap-4 text-on-surface-variant">
+    <a href="#" class="hover:text-primary transition-colors text-lg" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <a href="#" class="hover:text-primary transition-colors text-lg" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="hover:text-primary transition-colors text-lg" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+</div>
+</div>
+
+<div class="flex items-center space-x-4">
+    <a href="tel:+918275851544" class="hidden sm:flex items-center gap-2 text-sm font-label-md text-on-surface hover:text-primary transition-colors bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant">
+        <span class="material-symbols-outlined text-[16px]">call</span>
+        <span data-i18n="Topbar Phone">+91 82758 51544</span>
+    </a>
+    <div class="flex items-center bg-surface-variant rounded-full p-0.5 relative shadow-inner w-36 h-8 border border-outline-variant" id="lang-toggle-container">
+        <!-- Active background pill -->
+        <div id="lang-active-bg" class="absolute top-0.5 bottom-0.5 left-0.5 w-[calc(50%-2px)] bg-primary rounded-full shadow transition-transform duration-300 transform translate-x-0"></div>
+        
+        <button id="lang-en" class="relative z-10 w-1/2 h-full flex items-center justify-center text-[13px] font-medium transition-colors cursor-pointer text-on-primary">English</button>
+        <button id="lang-mr" class="relative z-10 w-1/2 h-full flex items-center justify-center text-[13px] font-medium transition-colors cursor-pointer text-on-surface-variant">मराठी</button>
+    </div>
+    <button id="menu-btn" class="p-1 text-on-surface hover:text-primary transition-colors md:hidden">
+        <span class="material-symbols-outlined text-3xl">more_vert</span>
+    </button>
+</div>
+</nav>
+</header>
+
+<main class="flex-grow py-12 bg-surface flex flex-col items-center justify-start px-4">
+    <div class="max-w-md w-full mb-8">
+        <a href="/index.html" class="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary transition-colors mb-4">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Back to Shop
+        </a>
+        <div class="bg-surface-container-low rounded-xl shadow-lg border border-outline-variant p-8 flex flex-col gap-6">
+            <div class="text-center">
+                <span class="material-symbols-outlined text-5xl text-primary mb-2">local_shipping</span>
+                <h1 class="font-headline-md text-3xl font-bold text-on-surface">Track Your Order</h1>
+                <p class="text-on-surface-variant text-sm mt-2">Enter your Order Number and Phone Number below to track your package.</p>
+            </div>
+            
+            <form id="trackForm" class="flex flex-col gap-4 mt-2">
+                <div class="flex flex-col">
+                    <label class="font-bold text-sm mb-1 text-on-surface">Order Number (Payment ID)</label>
+                    <input type="text" id="track_order_id" placeholder="e.g. pay_N2X..." required class="p-3 border border-outline-variant rounded bg-surface focus:outline-none focus:border-primary">
+                </div>
+                <div class="flex flex-col">
+                    <label class="font-bold text-sm mb-1 text-on-surface">Phone Number</label>
+                    <input type="tel" id="track_phone" placeholder="Enter phone used at checkout" required class="p-3 border border-outline-variant rounded bg-surface focus:outline-none focus:border-primary">
+                </div>
+                
+                <p id="trackError" class="text-error text-sm font-bold hidden mt-1"></p>
+
+                <button type="submit" id="trackBtn" class="w-full bg-primary text-on-primary py-3 rounded-lg font-bold text-lg hover:opacity-90 transition-opacity shadow-md flex items-center justify-center gap-2 mt-4">
+                    <span class="material-symbols-outlined">search</span>
+                    Track Now
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="trackResults" class="max-w-xl w-full hidden">
+        <div class="bg-white rounded-xl shadow-lg border border-outline-variant p-8">
+            <div class="border-b border-outline-variant pb-4 mb-4 flex justify-between items-start">
+                <div>
+                    <h2 class="text-xl font-bold text-on-surface">Order Status</h2>
+                    <p class="text-sm text-on-surface-variant font-mono mt-1" id="res_order_id"></p>
+                </div>
+                <div id="res_status_badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-surface-variant"></div>
+            </div>
+            
+            <div id="res_tracking_section" class="mb-6 hidden bg-primary-container p-4 rounded text-on-primary-container">
+                <span class="font-bold text-sm flex items-center gap-2 mb-1"><span class="material-symbols-outlined text-[18px]">info</span> Tracking Details</span>
+                <p id="res_tracking_text" class="text-sm font-mono"></p>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="font-bold text-on-surface mb-2">Customer Details</h3>
+                <p class="text-sm text-on-surface-variant flex items-center gap-2"><span class="material-symbols-outlined text-[16px]">person</span> <span id="res_cust_name"></span></p>
+                <p class="text-sm text-on-surface-variant flex items-center gap-2 mt-1"><span class="material-symbols-outlined text-[16px]">call</span> <span id="res_cust_phone"></span></p>
+                <p class="text-sm text-on-surface-variant flex items-start gap-2 mt-1"><span class="material-symbols-outlined text-[16px] mt-0.5">location_on</span> <span id="res_cust_address"></span></p>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-on-surface mb-2">Order Items</h3>
+                <div id="res_items" class="flex flex-col gap-3"></div>
+            </div>
+
+            <div class="border-t border-outline-variant pt-4 mt-6 flex justify-between items-center">
+                <span class="font-bold text-on-surface text-lg">Total Amount</span>
+                <span class="font-bold text-primary text-xl" id="res_total"></span>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer Component -->
+<footer class="w-full bg-surface-container-low dark:bg-surface-container-highest mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center py-8 px-4 md:px-margin-desktop max-w-container-max mx-auto border-t border-outline-variant">
+<div class="mb-4 md:mb-0">
+<div class="text-headline-sm font-headline-sm font-bold text-on-background dark:text-surface mb-1" data-i18n="Pranav Enterprises">
+                    Pranav Enterprises
+                </div>
+<p class="font-label-md text-label-md text-on-surface-variant dark:text-on-secondary-container" data-i18n="Copyright Text">
+                    © 2024 Pranav Enterprises. All rights reserved.
+                </p>
+</div>
+<div class="flex flex-wrap justify-center gap-6 md:gap-8">
+<a class="font-label-md text-label-md transition-all text-on-surface-variant dark:text-on-secondary-container hover:underline hover:text-primary" href="#" data-i18n="Privacy Policy">Privacy Policy</a>
+<a class="font-label-md text-label-md transition-all text-on-surface-variant dark:text-on-secondary-container hover:underline hover:text-primary" href="#" data-i18n="Terms of Service">Terms of Service</a>
+</div>
+</div>
+</footer>
+
+<!-- Mobile Navigation Drawer -->
+<div id="mobile-menu" class="fixed top-0 left-0 w-full bg-surface z-[100] flex flex-col transform -translate-y-full transition-transform duration-300 shadow-2xl pb-6 border-b border-outline-variant">
+    <!-- Menu Header -->
+    <div class="flex justify-between items-center p-4 border-b border-outline-variant">
+        <div class="flex items-center gap-3">
+            <img src="/logo.png" alt="R Logo" class="w-10 h-10 rounded-full object-cover shadow-sm"/>
+            <div class="flex flex-col">
+                <span class="text-headline-sm font-bold text-primary" style="font-family: 'Playfair Display', serif;" data-i18n="Pranav Enterprises">Pranav Enterprises</span>
+                <span class="text-[10px] text-on-surface-variant">Professional Solutions</span>
+            </div>
+        </div>
+        <button id="close-menu-btn" class="p-2 text-on-surface hover:text-error transition-colors">
+            <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+    </div>
+    <!-- Menu Links -->
+    <div class="flex flex-col p-4 space-y-6 font-headline-sm text-on-surface mt-2 text-center">
+        <a href="/index.html" class="hover:text-primary transition-colors" data-i18n="Home">Home</a>
+        <a href="/index.html#productGrid" class="hover:text-primary transition-colors" data-i18n="Our Collection">Our Collection</a>
+        <a href="/track.html" class="hover:text-primary transition-colors text-primary font-bold">Track Order</a>
+        <a href="/index.html" class="hover:text-primary transition-colors" data-i18n="Contact Us">Contact Us</a>
+    </div>
+</div>
+
+<script src="/translations.js"></script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    import { firebaseConfig } from "./firebase-config.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const trackForm = document.getElementById('trackForm');
+        const trackBtn = document.getElementById('trackBtn');
+        const trackError = document.getElementById('trackError');
+        const trackResults = document.getElementById('trackResults');
+        
+        trackForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const orderId = document.getElementById('track_order_id').value.trim();
+            const phone = document.getElementById('track_phone').value.trim();
+            
+            if(!orderId || !phone) return;
+
+            trackBtn.disabled = true;
+            trackBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Searching...';
+            trackError.classList.add('hidden');
+            trackResults.classList.add('hidden');
+
+            try {
+                // Firebase requires an index for multiple inequalities/where, but we can query by paymentId first
+                const q = query(collection(db, "orders"), where("paymentId", "==", orderId));
+                const querySnapshot = await getDocs(q);
+                
+                let foundOrder = null;
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    // Verify phone number client-side
+                    if(data.customerPhone && data.customerPhone.trim() === phone) {
+                        foundOrder = { id: doc.id, ...data };
+                    }
+                });
+
+                if (foundOrder) {
+                    displayOrder(foundOrder);
+                } else {
+                    trackError.textContent = "Order not found or phone number incorrect. Please check your details and try again.";
+                    trackError.classList.remove('hidden');
+                }
+            } catch(err) {
+                console.error(err);
+                trackError.textContent = "An error occurred while tracking. Please try again.";
+                trackError.classList.remove('hidden');
+            } finally {
+                trackBtn.disabled = false;
+                trackBtn.innerHTML = '<span class="material-symbols-outlined">search</span> Track Now';
+            }
+        });
+
+        function displayOrder(o) {
+            document.getElementById('res_order_id').textContent = "Order #" + o.paymentId;
+            document.getElementById('res_cust_name').textContent = o.customerName;
+            document.getElementById('res_cust_phone').textContent = o.customerPhone;
+            document.getElementById('res_cust_address').textContent = o.customerAddress;
+            document.getElementById('res_total').textContent = "₹ " + o.totalAmount;
+
+            const badge = document.getElementById('res_status_badge');
+            const status = o.orderStatus || 'Processing';
+            badge.textContent = status;
+            
+            badge.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide';
+            if (status === 'Processing') badge.classList.add('bg-secondary-container', 'text-on-secondary-container');
+            else if (status === 'Shipped') badge.classList.add('bg-primary-container', 'text-on-primary-container');
+            else if (status === 'Delivered') badge.classList.add('bg-[#dcfce7]', 'text-[#166534]');
+            else if (status === 'Cancelled') badge.classList.add('bg-error-container', 'text-on-error-container');
+            else badge.classList.add('bg-surface-variant', 'text-on-surface-variant');
+
+            const trackSec = document.getElementById('res_tracking_section');
+            if (o.trackingDetails) {
+                document.getElementById('res_tracking_text').textContent = o.trackingDetails;
+                trackSec.classList.remove('hidden');
+            } else {
+                trackSec.classList.add('hidden');
+            }
+
+            const itemsContainer = document.getElementById('res_items');
+            itemsContainer.innerHTML = '';
+            if(o.items && Array.isArray(o.items)) {
+                o.items.forEach(item => {
+                    itemsContainer.innerHTML += `
+                        <div class="flex gap-4 border-b border-outline-variant pb-2 items-center">
+                            <img src="${item.image}" class="w-12 h-12 object-cover rounded shadow-sm bg-surface-container" />
+                            <div class="flex-1">
+                                <h4 class="font-bold text-sm text-on-surface line-clamp-1">${item.name}</h4>
+                                <span class="text-xs text-on-surface-variant">Qty: ${item.quantity}</span>
+                            </div>
+                            <div class="font-bold text-on-surface text-sm">₹ ${item.price * item.quantity}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            trackResults.classList.remove('hidden');
+        }
+
+        // Mobile Menu Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (menuBtn && closeBtn && mobileMenu) {
+            menuBtn.addEventListener('click', () => mobileMenu.classList.remove('-translate-y-full'));
+            closeBtn.addEventListener('click', () => mobileMenu.classList.add('-translate-y-full'));
+        }
+    });
+</script>
+</body></html>

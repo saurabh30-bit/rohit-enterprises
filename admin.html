@@ -4,301 +4,612 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Admin Panel | Pranav Enterprises</title>
-<!-- Tailwind CSS -->
 <link rel="stylesheet" href="/output.css">
-<!-- Google Fonts -->
+<link rel="icon" href="/logo.png" type="image/png">
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<!-- Material Symbols -->
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        body {
-            background-color: #F8FAFC;
-        }
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        vertical-align: middle;
+    }
+    body { background-color: #F1F5F9; }
+    
+    /* Sidebar */
+    .sidebar { width: 260px; min-height: calc(100vh - 64px); }
+    .sidebar-link {
+        display: flex; align-items: center; gap: 12px;
+        padding: 12px 16px; border-radius: 8px; cursor: pointer;
+        font-weight: 500; font-size: 14px; color: #64748b;
+        transition: all 0.15s ease;
+    }
+    .sidebar-link:hover { background: #e2e8f0; color: #1e293b; }
+    .sidebar-link.active { background: #1a1a2e; color: #fff; }
+    .sidebar-link.active .material-symbols-outlined { color: #fff; }
+    .sidebar-link .material-symbols-outlined { font-size: 22px; color: #94a3b8; }
+    
+    /* Sub-links inside Management */
+    .sidebar-sub-link {
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 16px 10px 52px; border-radius: 8px; cursor: pointer;
+        font-weight: 500; font-size: 13px; color: #64748b;
+        transition: all 0.15s ease;
+    }
+    .sidebar-sub-link:hover { background: #e2e8f0; color: #1e293b; }
+    .sidebar-sub-link.active { background: #e0e7ff; color: #1a1a2e; font-weight: 600; }
+    
+    /* Stat cards */
+    .stat-card {
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px 24px;
+        transition: all 0.2s ease;
+    }
+    .stat-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); transform: translateY(-1px); }
+    
+    /* Order card */
+    .order-card {
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px;
+        transition: all 0.15s ease; margin-bottom: 12px;
+    }
+    .order-card:hover { border-color: #1a1a2e; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    
+    /* Product/Work rows */
+    .item-row {
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px;
+        transition: all 0.15s ease; margin-bottom: 10px;
+    }
+    .item-row:hover { border-color: #1a1a2e; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    
+    /* Status badges */
+    .badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; }
+    .badge-processing { background: #fef3c7; color: #92400e; }
+    .badge-shipped { background: #dbeafe; color: #1e40af; }
+    .badge-delivered { background: #dcfce7; color: #166534; }
+    .badge-cancelled { background: #fee2e2; color: #991b1b; }
+    .badge-published { background: #dcfce7; color: #166534; }
+    .badge-draft { background: #f1f5f9; color: #64748b; }
+    .badge-soldout { background: #fee2e2; color: #991b1b; }
+    
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #fff; border-radius: 16px; padding: 32px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+    .modal-box h2 { font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+    
+    /* Form inputs */
+    .form-input {
+        width: 100%; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px;
+        font-size: 14px; transition: border-color 0.15s ease; outline: none; background: #fff;
+    }
+    .form-input:focus { border-color: #1a1a2e; box-shadow: 0 0 0 3px rgba(26,26,46,0.08); }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; }
+    
+    /* Action buttons */
+    .btn-primary { background: #1a1a2e; color: #fff; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; transition: all 0.15s ease; cursor: pointer; border: none; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: #fff; color: #475569; padding: 10px 20px; border-radius: 8px; font-weight: 500; font-size: 14px; border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.15s ease; }
+    .btn-secondary:hover { background: #f8fafc; }
+    .btn-danger { background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s ease; }
+    .btn-danger:hover { background: #fecaca; }
+    
+    /* Order filter tabs */
+    .filter-tab { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s ease; border: 1px solid #e2e8f0; background: #fff; color: #64748b; }
+    .filter-tab:hover { background: #f1f5f9; }
+    .filter-tab.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+    
+    /* Mobile sidebar toggle */
+    @media (max-width: 768px) {
+        .sidebar { display: none; position: fixed; top: 64px; left: 0; z-index: 90; background: #fff; width: 260px; box-shadow: 4px 0 20px rgba(0,0,0,0.1); }
+        .sidebar.open { display: flex; }
+    }
+    
+    /* Toast */
+    .toast { position: fixed; bottom: 24px; right: 24px; background: #1a1a2e; color: #fff; padding: 14px 24px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 200; transform: translateY(100px); opacity: 0; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; }
+    .toast.show { transform: translateY(0); opacity: 1; }
 </style>
 </head>
-<body class="font-body-md text-body-md text-on-surface antialiased relative"><div id="authLoading" class="flex flex-col items-center justify-center min-h-screen">
+<body class="font-body-md text-body-md antialiased">
+
+<!-- Auth Loading -->
+<div id="authLoading" class="flex flex-col items-center justify-center min-h-screen">
     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
     <p class="text-lg font-headline-md text-on-surface-variant">Verifying Access...</p>
 </div>
+
+<!-- Main Admin App -->
 <div id="adminContent" class="hidden">
-<header class="w-full top-0 sticky bg-surface dark:bg-on-background border-b border-outline-variant dark:border-outline z-50">
-<div class="flex justify-between items-center h-16 px-margin-desktop max-w-container-max mx-auto">
-<a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-<img src="/logo.png" alt="R Logo" class="w-9 h-9 rounded-full object-cover shadow-sm"/>
-<span class="text-headline-sm font-bold text-on-background dark:text-surface" style="font-family: 'Playfair Display', serif;" data-i18n="Pranav Enterprises">Pranav Enterprises</span>
-</a>
-<nav class="hidden md:flex items-center space-x-8">
-<a class="font-body-md text-body-md text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 cursor-pointer duration-200" href="/admin" data-i18n="Admin Access">Admin Access</a>
-</nav>
-<div class="flex items-center space-x-4">
-<a href="/" class="bg-primary text-on-primary px-6 py-2 rounded font-label-md text-label-md hover:opacity-90 transition-all cursor-pointer" data-i18n="View Site">View Site</a>
-<button id="logoutBtn" class="border border-outline-variant text-on-surface-variant px-4 py-2 rounded font-label-md text-label-md hover:bg-surface transition-all cursor-pointer" data-i18n="Logout">Logout</button>
-</div>
-</div>
-</header>
-<main class="max-w-container-max mx-auto px-margin-desktop py-12">
-<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
-<div>
-<h1 class="font-headline-md text-headline-md text-on-surface mb-2" data-i18n="Product Management">Management</h1>
-<p class="font-body-md text-body-md text-on-surface-variant" data-i18n="Manage and monitor your enterprise product catalog.">Manage and monitor your enterprise data.</p>
-</div>
-<div class="flex gap-2">
-    <button id="addBtn" class="flex items-center gap-2 bg-on-background text-surface px-4 py-2 rounded hover:opacity-90 transition-all shadow-sm">
-        <span class="material-symbols-outlined">add</span>
-        <span class="font-label-md text-label-md" data-i18n="Upload New Product">Upload New Product</span>
-    </button>
-    <button id="addWorkBtn" class="flex items-center gap-2 bg-on-background text-surface px-4 py-2 rounded hover:opacity-90 transition-all shadow-sm hidden">
-        <span class="material-symbols-outlined">add</span>
-        <span class="font-label-md text-label-md" data-i18n="Upload New Work">Upload New Work</span>
-    </button>
-</div>
-</div>
 
-<div class="flex gap-6 mb-8 border-b border-outline-variant">
-   <button id="tabProducts" class="pb-2 border-b-2 border-primary text-primary font-bold transition-all text-lg" data-i18n="Products">Products</button>
-   <button id="tabWorks" class="pb-2 text-on-surface-variant font-bold transition-all text-lg hover:text-primary" data-i18n="Work">Work</button>
-   <button id="tabOrders" class="pb-2 text-on-surface-variant font-bold transition-all text-lg hover:text-primary">Orders</button>
-</div>
-
-<!-- PRODUCTS SECTION -->
-<div id="sectionProducts">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-12">
-        <div class="bg-surface p-8 border border-outline-variant rounded hover:shadow-md transition-all duration-300">
-            <div class="flex justify-between items-start mb-4">
-                <span class="material-symbols-outlined text-primary text-3xl">inventory_2</span>
-                <span class="text-on-error-container bg-error-container px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider" data-i18n="All">All</span>
-            </div>
-            <p class="font-label-md text-label-md text-on-surface-variant mb-1" data-i18n="All Products">All Products</p>
-            <h3 class="font-headline-sm text-headline-sm text-on-surface" id="totalCount">Loading...</h3>
+<!-- Top Header Bar -->
+<header class="w-full sticky top-0 bg-white border-b border-[#e2e8f0] z-50">
+    <div class="flex justify-between items-center h-16 px-4 md:px-6">
+        <div class="flex items-center gap-3">
+            <button id="sidebarToggle" class="md:hidden p-2 hover:bg-gray-100 rounded-lg">
+                <span class="material-symbols-outlined text-2xl">menu</span>
+            </button>
+            <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <img src="/logo.png" alt="Logo" class="w-9 h-9 rounded-full object-cover shadow-sm"/>
+                <span class="text-lg font-bold text-[#1a1a2e] hidden sm:block" style="font-family: 'Playfair Display', serif;">Pranav Enterprises</span>
+            </a>
         </div>
-        <div class="bg-surface p-8 border border-outline-variant rounded hover:shadow-md transition-all duration-300">
-            <div class="flex justify-between items-start mb-4">
-                <span class="material-symbols-outlined text-outline text-3xl">edit_document</span>
-                <span class="text-on-surface-variant bg-surface-container-highest px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider" data-i18n="Draft">Draft</span>
-            </div>
-            <p class="font-label-md text-label-md text-on-surface-variant mb-1" data-i18n="Draft Products">Draft Products</p>
-            <h3 class="font-headline-sm text-headline-sm text-on-surface" id="draftCount">Loading...</h3>
-        </div>
-        <div class="bg-surface p-8 border border-outline-variant rounded hover:shadow-md transition-all duration-300">
-            <div class="flex justify-between items-start mb-4">
-                <span class="material-symbols-outlined text-error text-3xl">remove_shopping_cart</span>
-                <span class="text-on-error bg-error px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider" data-i18n="Sold Out">Sold Out</span>
-            </div>
-            <p class="font-label-md text-label-md text-on-surface-variant mb-1" data-i18n="Sold Out Products">Sold Out Products</p>
-            <h3 class="font-headline-sm text-headline-sm text-on-surface" id="soldOutCount">Loading...</h3>
+        <div class="flex items-center gap-3">
+            <a href="/" class="btn-primary flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-[18px]">visibility</span>
+                <span class="hidden sm:inline">View Site</span>
+            </a>
+            <button id="logoutBtn" class="btn-secondary flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-[18px]">logout</span>
+                <span class="hidden sm:inline">Logout</span>
+            </button>
         </div>
     </div>
-    <div class="flex justify-end items-center mb-4">
-        <select id="productFilter" class="p-2 border rounded border-outline-variant text-label-md font-label-md bg-surface cursor-pointer">
-            <option value="All" data-i18n="All Products">All Products</option>
-            <option value="Published" data-i18n="Published Products">Published Products</option>
-            <option value="Draft" data-i18n="Draft Products">Draft Products</option>
-            <option value="SoldOut" data-i18n="Sold Out Products">Sold Out Products</option>
+</header>
+
+<!-- Layout: Sidebar + Content -->
+<div class="flex h-[calc(100vh-64px)] overflow-hidden">
+
+<!-- Sidebar -->
+<aside id="sidebar" class="sidebar flex-shrink-0 bg-white border-r border-[#e2e8f0] flex flex-col p-4 gap-1 overflow-y-auto">
+    
+    <!-- User info -->
+    <div class="px-4 py-4 mb-2 border-b border-[#e2e8f0]">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#1a1a2e] flex items-center justify-center text-white font-bold text-sm">A</div>
+            <div>
+                <div class="text-sm font-bold text-[#1a1a2e]">Admin</div>
+                <div class="text-xs text-[#94a3b8]">Manager Access</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="flex flex-col gap-1">
+        <div class="px-4 py-2 text-[10px] font-bold text-[#94a3b8] uppercase tracking-widest">Main Menu</div>
+        
+        <div class="sidebar-link active" data-section="orders" id="navOrders">
+            <span class="material-symbols-outlined">receipt_long</span>
+            Orders
+        </div>
+        
+        <div class="px-4 py-2 mt-4 text-[10px] font-bold text-[#94a3b8] uppercase tracking-widest">Management</div>
+        
+        <div class="sidebar-link" data-section="products" id="navProducts">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Products
+        </div>
+        
+        <div class="sidebar-link" data-section="works" id="navWorks">
+            <span class="material-symbols-outlined">photo_library</span>
+            Work Gallery
+        </div>
+    </div>
+    
+    <!-- Bottom section -->
+    <div class="mt-auto pt-4 border-t border-[#e2e8f0]">
+        <a href="/track.html" class="sidebar-link" target="_blank">
+            <span class="material-symbols-outlined">local_shipping</span>
+            Track Order Page
+        </a>
+    </div>
+</aside>
+
+<!-- Main Content Area -->
+<main class="flex-1 p-4 md:p-8 overflow-hidden flex flex-col">
+
+<!-- ===== ORDERS SECTION ===== -->
+<div id="sectionOrders" class="section-page flex flex-col flex-1 min-h-0">
+    
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
+                <span class="material-symbols-outlined text-[28px]">receipt_long</span>
+                Orders
+            </h1>
+            <p class="text-sm text-[#64748b] mt-1">Manage and track all customer orders</p>
+        </div>
+    </div>
+    
+    <!-- Order Stats Row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="stat-card">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-lg bg-[#f0f0ff] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[#1a1a2e]">shopping_bag</span>
+                </div>
+            </div>
+            <div class="text-2xl font-bold text-[#1a1a2e]" id="totalOrdersCount">0</div>
+            <div class="text-xs text-[#94a3b8] font-medium mt-1">Total Orders</div>
+        </div>
+        <div class="stat-card">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-lg bg-[#fef3c7] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[#92400e]">pending</span>
+                </div>
+            </div>
+            <div class="text-2xl font-bold text-[#92400e]" id="processingCount">0</div>
+            <div class="text-xs text-[#94a3b8] font-medium mt-1">Processing</div>
+        </div>
+        <div class="stat-card">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-lg bg-[#dbeafe] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[#1e40af]">local_shipping</span>
+                </div>
+            </div>
+            <div class="text-2xl font-bold text-[#1e40af]" id="shippedCount">0</div>
+            <div class="text-xs text-[#94a3b8] font-medium mt-1">Shipped</div>
+        </div>
+        <div class="stat-card">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-lg bg-[#dcfce7] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[#166534]">check_circle</span>
+                </div>
+            </div>
+            <div class="text-2xl font-bold text-[#166534]" id="deliveredCount">0</div>
+            <div class="text-xs text-[#94a3b8] font-medium mt-1">Delivered</div>
+        </div>
+    </div>
+    
+    <!-- Order Filters -->
+    <div class="flex flex-wrap gap-2 mb-6">
+        <button class="filter-tab active" data-filter="all">All Orders</button>
+        <button class="filter-tab" data-filter="Processing">Processing</button>
+        <button class="filter-tab" data-filter="Shipped">Shipped</button>
+        <button class="filter-tab" data-filter="Delivered">Delivered</button>
+        <button class="filter-tab" data-filter="Cancelled">Cancelled</button>
+    </div>
+    
+    <!-- Orders List -->
+    <div id="orderRows" class="flex-1 overflow-y-auto pr-1" style="min-height:0"></div>
+</div>
+
+<!-- ===== PRODUCTS SECTION ===== -->
+<div id="sectionProducts" class="section-page hidden flex flex-col flex-1 min-h-0">
+    
+    <a href="#" class="inline-flex items-center gap-1 text-sm text-[#94a3b8] hover:text-[#1a1a2e] transition-colors mb-4 back-to-orders">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        Back to Orders
+    </a>
+
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
+                <span class="material-symbols-outlined text-[28px]">inventory_2</span>
+                Products
+            </h1>
+            <p class="text-sm text-[#64748b] mt-1">Manage your product catalog</p>
+        </div>
+        <button id="addBtn" class="btn-primary flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            Add Product
+        </button>
+    </div>
+    
+    <!-- Product Stats -->
+    <div class="grid grid-cols-3 gap-4 mb-8">
+        <div class="stat-card">
+            <div class="text-2xl font-bold text-[#1a1a2e]" id="totalCount">0</div>
+            <div class="text-xs text-[#94a3b8] font-medium mt-1">Total Products</div>
+        </div>
+        <div class="stat-card">
+            <div class="text-2xl font-bold text-[#64748b]" id="draftCount">0</div>
+            <div class="text-xs text-[#94a3b8] font-medium mt-1">Drafts</div>
+        </div>
+        <div class="stat-card">
+            <div class="text-2xl font-bold text-[#991b1b]" id="soldOutCount">0</div>
+            <div class="text-xs text-[#94a3b8] font-medium mt-1">Sold Out</div>
+        </div>
+    </div>
+    
+    <!-- Product Filter -->
+    <div class="flex justify-between items-center mb-4">
+        <select id="productFilter" class="form-input" style="width: auto; min-width: 180px;">
+            <option value="All">All Products</option>
+            <option value="Published">Published</option>
+            <option value="Draft">Drafts</option>
+            <option value="SoldOut">Sold Out</option>
         </select>
     </div>
-    <div class="grid grid-cols-1 gap-4" id="productListContainer">
-        <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant text-on-surface-variant font-label-md text-label-md">
-            <div class="col-span-6" data-i18n="PRODUCT DETAILS">PRODUCT DETAILS</div>
-            <div class="col-span-3 text-center" data-i18n="STATUS">STATUS</div>
-            <div class="col-span-2 text-center" data-i18n="DATE ADDED">DATE ADDED</div>
-            <div class="col-span-1 text-right" data-i18n="ACTION">ACTION</div>
-        </div>
-        <div id="productRows" class="overflow-y-auto max-h-[60vh] pr-2"></div>
-    </div>
+    
+    <!-- Product List -->
+    <div id="productRows" class="flex-1 overflow-y-auto pr-1" style="min-height:0"></div>
 </div>
 
-<!-- WORKS SECTION -->
-<div id="sectionWorks" class="hidden">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-12">
-        <div class="bg-surface p-8 border border-outline-variant rounded hover:shadow-md transition-all duration-300">
-            <div class="flex justify-between items-start mb-4">
-                <span class="material-symbols-outlined text-secondary text-3xl">photo_library</span>
-                <span class="text-on-error-container bg-error-container px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider" data-i18n="Active">Active</span>
-            </div>
-            <p class="font-label-md text-label-md text-on-surface-variant mb-1" data-i18n="Total Work Items">Total Work Items</p>
-            <h3 class="font-headline-sm text-headline-sm text-on-surface" id="totalWorkCount">Loading...</h3>
-        </div>
-    </div>
-    <div class="grid grid-cols-1 gap-4" id="workListContainer">
-        <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant text-on-surface-variant font-label-md text-label-md">
-            <div class="col-span-6" data-i18n="WORK DETAILS">WORK DETAILS</div>
-            <div class="col-span-3 text-center" data-i18n="STATUS">STATUS</div>
-            <div class="col-span-2 text-center" data-i18n="DATE ADDED">DATE ADDED</div>
-            <div class="col-span-1 text-right" data-i18n="ACTION">ACTION</div>
-        </div>
-        <div id="workRows" class="overflow-y-auto max-h-[60vh] pr-2"></div>
-    </div>
-    </div>
-</div>
+<!-- ===== WORKS SECTION ===== -->
+<div id="sectionWorks" class="section-page hidden flex flex-col flex-1 min-h-0">
+    
+    <a href="#" class="inline-flex items-center gap-1 text-sm text-[#94a3b8] hover:text-[#1a1a2e] transition-colors mb-4 back-to-orders">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        Back to Orders
+    </a>
 
-<!-- ORDERS SECTION -->
-<div id="sectionOrders" class="hidden">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-12">
-        <div class="bg-surface p-8 border border-outline-variant rounded hover:shadow-md transition-all duration-300">
-            <div class="flex justify-between items-start mb-4">
-                <span class="material-symbols-outlined text-primary text-3xl">receipt_long</span>
-                <span class="text-on-primary-container bg-primary-container px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">All</span>
-            </div>
-            <p class="font-label-md text-label-md text-on-surface-variant mb-1">Total Orders</p>
-            <h3 class="font-headline-sm text-headline-sm text-on-surface" id="totalOrdersCount">Loading...</h3>
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
+                <span class="material-symbols-outlined text-[28px]">photo_library</span>
+                Work Gallery
+            </h1>
+            <p class="text-sm text-[#64748b] mt-1">Showcase your completed projects</p>
+        </div>
+        <button id="addWorkBtn" class="btn-primary flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            Add Work
+        </button>
+    </div>
+    
+    <!-- Work Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div class="stat-card">
+            <div class="text-2xl font-bold text-[#1a1a2e]" id="totalWorkCount">0</div>
+            <div class="text-xs text-[#94a3b8] font-medium mt-1">Total Work Items</div>
         </div>
     </div>
-    <div class="grid grid-cols-1 gap-4">
-        <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-outline-variant text-on-surface-variant font-label-md text-label-md">
-            <div class="col-span-3">DATE & ID</div>
-            <div class="col-span-4">CUSTOMER INFO</div>
-            <div class="col-span-3">ITEMS</div>
-            <div class="col-span-2 text-right">TOTAL</div>
-        </div>
-        <div id="orderRows" class="overflow-y-auto max-h-[60vh] pr-2"></div>
-    </div>
+    
+    <!-- Work List -->
+    <div id="workRows" class="flex-1 overflow-y-auto pr-1" style="min-height:0"></div>
 </div>
 
 </main>
+</div><!-- /flex layout -->
+</div><!-- /adminContent -->
 
-</main>
+<!-- Toast -->
+<div id="adminToast" class="toast">
+    <span class="material-symbols-outlined text-[18px]">check_circle</span>
+    <span id="toastMsg">Saved successfully</span>
 </div>
 
-<!-- Modals for Products -->
-<div id="addProductModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100] p-4">
-    <div class="bg-surface p-8 rounded border border-outline-variant shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
-        <h2 class="font-headline-sm mb-6 text-primary">Upload New Product</h2>
+<!-- ===== MODALS ===== -->
+
+<!-- Add Product Modal -->
+<div id="addProductModal" class="modal-overlay">
+    <div class="modal-box">
+        <h2><span class="material-symbols-outlined">add_circle</span> New Product</h2>
         <form id="addProductForm" class="flex flex-col gap-4">
-            <div class="flex flex-col gap-4">
-                <input type="text" id="p_name_en" placeholder="Product Name (English)" required class="p-2 border rounded border-outline-variant">
-                <input type="text" id="p_name_mr" placeholder="Product Name (Marathi)" class="p-2 border rounded border-outline-variant">
-                <input type="text" id="p_desc_en" placeholder="Description (English)" required class="p-2 border rounded border-outline-variant">
-                <input type="text" id="p_desc_mr" placeholder="Description (Marathi)" class="p-2 border rounded border-outline-variant">
-                <input type="number" id="p_price" placeholder="Price (₹)" required min="0" class="p-2 border rounded border-outline-variant">
+            <div>
+                <label class="form-label">Product Name (English) *</label>
+                <input type="text" id="p_name_en" required class="form-input" placeholder="Enter product name">
             </div>
-            <select id="p_status" class="p-2 border rounded border-outline-variant">
-                <option value="Published">Published</option>
-                <option value="Draft">Draft</option>
-            </select>
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" id="p_sold_out" class="rounded border-outline-variant text-primary">
-                    <label for="p_sold_out" class="font-label-md text-on-surface">Mark as Sold Out</label>
+            <div>
+                <label class="form-label">Product Name (Marathi)</label>
+                <input type="text" id="p_name_mr" class="form-input" placeholder="उत्पादनाचे नाव">
+            </div>
+            <div>
+                <label class="form-label">Description (English) *</label>
+                <input type="text" id="p_desc_en" required class="form-input" placeholder="Short description">
+            </div>
+            <div>
+                <label class="form-label">Description (Marathi)</label>
+                <input type="text" id="p_desc_mr" class="form-input" placeholder="वर्णन">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="form-label">Price (₹) *</label>
+                    <input type="number" id="p_price" required min="0" class="form-input" placeholder="0">
                 </div>
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" id="p_pinned" class="rounded border-outline-variant text-primary">
-                    <label for="p_pinned" class="font-label-md text-on-surface">Pin Product</label>
+                <div>
+                    <label class="form-label">Status</label>
+                    <select id="p_status" class="form-input">
+                        <option value="Published">Published</option>
+                        <option value="Draft">Draft</option>
+                    </select>
                 </div>
             </div>
-            <label class="text-sm font-label-md text-on-surface-variant">Product Image</label>
-            <input type="file" id="p_image" accept="image/*" required class="p-2 border rounded border-outline-variant text-sm">
-            <p id="uploadStatus" class="text-sm text-primary hidden">Saving...</p>
-            <div class="flex justify-end gap-2 mt-4">
-                <button type="button" onclick="document.getElementById('addProductModal').classList.add('hidden')" class="px-4 py-2 rounded text-on-surface-variant border border-outline-variant hover:bg-surface-container-low">Cancel</button>
-                <button type="submit" id="submitBtn" class="bg-primary text-on-primary px-4 py-2 rounded hover:opacity-90">Save Product</button>
+            <div class="flex items-center gap-6">
+                <label class="flex items-center gap-2 cursor-pointer text-sm">
+                    <input type="checkbox" id="p_sold_out" class="rounded">
+                    Sold Out
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-sm">
+                    <input type="checkbox" id="p_pinned" class="rounded">
+                    Pin to Top
+                </label>
+            </div>
+            <div>
+                <label class="form-label">Product Image *</label>
+                <input type="file" id="p_image" accept="image/*" required class="form-input text-sm">
+            </div>
+            <p id="uploadStatus" class="text-sm text-primary hidden font-medium">⏳ Saving product...</p>
+            <div class="flex justify-end gap-3 mt-2">
+                <button type="button" onclick="document.getElementById('addProductModal').classList.remove('show')" class="btn-secondary">Cancel</button>
+                <button type="submit" id="submitBtn" class="btn-primary">Save Product</button>
             </div>
         </form>
     </div>
 </div>
 
-<div id="editProductModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100] p-4">
-    <div class="bg-surface p-8 rounded border border-outline-variant shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
-        <h2 class="font-headline-sm mb-6 text-primary">Edit Product</h2>
+<!-- Edit Product Modal -->
+<div id="editProductModal" class="modal-overlay">
+    <div class="modal-box">
+        <h2><span class="material-symbols-outlined">edit</span> Edit Product</h2>
         <form id="editProductForm" class="flex flex-col gap-4">
             <input type="hidden" id="e_id">
-            <div class="flex flex-col gap-4">
-                <input type="text" id="e_name_en" placeholder="Product Name (English)" required class="p-2 border rounded border-outline-variant">
-                <input type="text" id="e_name_mr" placeholder="Product Name (Marathi)" class="p-2 border rounded border-outline-variant">
-                <input type="text" id="e_desc_en" placeholder="Description (English)" required class="p-2 border rounded border-outline-variant">
-                <input type="text" id="e_desc_mr" placeholder="Description (Marathi)" class="p-2 border rounded border-outline-variant">
-                <input type="number" id="e_price" placeholder="Price (₹)" required min="0" class="p-2 border rounded border-outline-variant">
+            <div>
+                <label class="form-label">Product Name (English) *</label>
+                <input type="text" id="e_name_en" required class="form-input">
             </div>
-            <select id="e_status" class="p-2 border rounded border-outline-variant">
-                <option value="Published">Published</option>
-                <option value="Draft">Draft</option>
-            </select>
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" id="e_sold_out" class="rounded border-outline-variant text-primary">
-                    <label for="e_sold_out" class="font-label-md text-on-surface">Mark as Sold Out</label>
+            <div>
+                <label class="form-label">Product Name (Marathi)</label>
+                <input type="text" id="e_name_mr" class="form-input">
+            </div>
+            <div>
+                <label class="form-label">Description (English) *</label>
+                <input type="text" id="e_desc_en" required class="form-input">
+            </div>
+            <div>
+                <label class="form-label">Description (Marathi)</label>
+                <input type="text" id="e_desc_mr" class="form-input">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="form-label">Price (₹) *</label>
+                    <input type="number" id="e_price" required min="0" class="form-input">
                 </div>
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" id="e_pinned" class="rounded border-outline-variant text-primary">
-                    <label for="e_pinned" class="font-label-md text-on-surface">Pin Product</label>
+                <div>
+                    <label class="form-label">Status</label>
+                    <select id="e_status" class="form-input">
+                        <option value="Published">Published</option>
+                        <option value="Draft">Draft</option>
+                    </select>
                 </div>
             </div>
-            <div class="flex justify-end gap-2 mt-4">
-                <button type="button" onclick="document.getElementById('editProductModal').classList.add('hidden')" class="px-4 py-2 rounded text-on-surface-variant border border-outline-variant hover:bg-surface-container-low">Cancel</button>
-                <button type="submit" id="submitEditBtn" class="bg-primary text-on-primary px-4 py-2 rounded hover:opacity-90">Save Changes</button>
+            <div class="flex items-center gap-6">
+                <label class="flex items-center gap-2 cursor-pointer text-sm">
+                    <input type="checkbox" id="e_sold_out" class="rounded">
+                    Sold Out
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-sm">
+                    <input type="checkbox" id="e_pinned" class="rounded">
+                    Pin to Top
+                </label>
+            </div>
+            <div class="flex justify-end gap-3 mt-2">
+                <button type="button" onclick="document.getElementById('editProductModal').classList.remove('show')" class="btn-secondary">Cancel</button>
+                <button type="submit" id="submitEditBtn" class="btn-primary">Save Changes</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Modals for Work -->
-<div id="addWorkModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100] p-4">
-    <div class="bg-surface p-8 rounded border border-outline-variant shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
-        <h2 class="font-headline-sm mb-6 text-secondary">Upload New Work</h2>
+<!-- Add Work Modal -->
+<div id="addWorkModal" class="modal-overlay">
+    <div class="modal-box">
+        <h2><span class="material-symbols-outlined">add_circle</span> New Work</h2>
         <form id="addWorkForm" class="flex flex-col gap-4">
-            <div class="flex flex-col gap-4">
-                <input type="text" id="w_title_en" placeholder="Title (English)" required class="p-2 border rounded border-outline-variant">
-                <input type="text" id="w_title_mr" placeholder="Title (Marathi)" class="p-2 border rounded border-outline-variant">
-                <input type="text" id="w_desc_en" placeholder="Description (English)" required class="p-2 border rounded border-outline-variant">
-                <input type="text" id="w_desc_mr" placeholder="Description (Marathi)" class="p-2 border rounded border-outline-variant">
+            <div>
+                <label class="form-label">Title (English) *</label>
+                <input type="text" id="w_title_en" required class="form-input" placeholder="Project title">
             </div>
-            <div class="flex items-center gap-4">
-                <select id="w_status" class="p-2 border rounded border-outline-variant flex-grow">
-                    <option value="Published">Published</option>
-                    <option value="Draft">Draft</option>
-                </select>
-                <div class="flex items-center gap-2 whitespace-nowrap">
-                    <input type="checkbox" id="w_pinned" class="rounded border-outline-variant text-secondary">
-                    <label for="w_pinned" class="font-label-md text-on-surface">Pin Work</label>
+            <div>
+                <label class="form-label">Title (Marathi)</label>
+                <input type="text" id="w_title_mr" class="form-input" placeholder="प्रकल्पाचे शीर्षक">
+            </div>
+            <div>
+                <label class="form-label">Description (English) *</label>
+                <input type="text" id="w_desc_en" required class="form-input" placeholder="Short description">
+            </div>
+            <div>
+                <label class="form-label">Description (Marathi)</label>
+                <input type="text" id="w_desc_mr" class="form-input" placeholder="वर्णन">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="form-label">Status</label>
+                    <select id="w_status" class="form-input">
+                        <option value="Published">Published</option>
+                        <option value="Draft">Draft</option>
+                    </select>
+                </div>
+                <div class="flex items-center pt-6">
+                    <label class="flex items-center gap-2 cursor-pointer text-sm">
+                        <input type="checkbox" id="w_pinned" class="rounded">
+                        Pin to Top
+                    </label>
                 </div>
             </div>
-            <label class="text-sm font-label-md text-on-surface-variant">Work Image</label>
-            <input type="file" id="w_image" accept="image/*" required class="p-2 border rounded border-outline-variant text-sm">
-            <p id="workUploadStatus" class="text-sm text-secondary hidden">Saving...</p>
-            <div class="flex justify-end gap-2 mt-4">
-                <button type="button" onclick="document.getElementById('addWorkModal').classList.add('hidden')" class="px-4 py-2 rounded text-on-surface-variant border border-outline-variant hover:bg-surface-container-low">Cancel</button>
-                <button type="submit" id="submitWorkBtn" class="bg-secondary text-on-secondary px-4 py-2 rounded hover:opacity-90">Save Work</button>
+            <div>
+                <label class="form-label">Work Image *</label>
+                <input type="file" id="w_image" accept="image/*" required class="form-input text-sm">
             </div>
-        </form>
+            <p id="workUploadStatus" class="text-sm text-primary hidden font-medium">⏳ Saving work...</p>
+            <div class="flex justify-end gap-3 mt-2">
+                <button type="button" onclick="document.getElementById('addWorkModal').classList.remove('show')" class="btn-secondary">Cancel</button>
+                <button type="submit" id="submitWorkBtn" class="btn-primary">Save Work</button>
             </div>
         </form>
     </div>
 </div>
 
-<div id="editWorkModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100] p-4">
-    <div class="bg-surface p-8 rounded border border-outline-variant shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
-        <h2 class="font-headline-sm mb-6 text-secondary">Edit Work</h2>
+<!-- Edit Work Modal -->
+<div id="editWorkModal" class="modal-overlay">
+    <div class="modal-box">
+        <h2><span class="material-symbols-outlined">edit</span> Edit Work</h2>
         <form id="editWorkForm" class="flex flex-col gap-4">
             <input type="hidden" id="ew_id">
-            <div class="flex flex-col gap-4">
-                <input type="text" id="ew_title_en" placeholder="Title (English)" required class="p-2 border rounded border-outline-variant">
-                <input type="text" id="ew_title_mr" placeholder="Title (Marathi)" class="p-2 border rounded border-outline-variant">
-                <input type="text" id="ew_desc_en" placeholder="Description (English)" required class="p-2 border rounded border-outline-variant">
-                <input type="text" id="ew_desc_mr" placeholder="Description (Marathi)" class="p-2 border rounded border-outline-variant">
+            <div>
+                <label class="form-label">Title (English) *</label>
+                <input type="text" id="ew_title_en" required class="form-input">
             </div>
-            <div class="flex items-center gap-4">
-                <select id="ew_status" class="p-2 border rounded border-outline-variant flex-grow">
-                    <option value="Published">Published</option>
-                    <option value="Draft">Draft</option>
-                </select>
-                <div class="flex items-center gap-2 whitespace-nowrap">
-                    <input type="checkbox" id="ew_pinned" class="rounded border-outline-variant text-secondary">
-                    <label for="ew_pinned" class="font-label-md text-on-surface">Pin Work</label>
+            <div>
+                <label class="form-label">Title (Marathi)</label>
+                <input type="text" id="ew_title_mr" class="form-input">
+            </div>
+            <div>
+                <label class="form-label">Description (English) *</label>
+                <input type="text" id="ew_desc_en" required class="form-input">
+            </div>
+            <div>
+                <label class="form-label">Description (Marathi)</label>
+                <input type="text" id="ew_desc_mr" class="form-input">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="form-label">Status</label>
+                    <select id="ew_status" class="form-input">
+                        <option value="Published">Published</option>
+                        <option value="Draft">Draft</option>
+                    </select>
+                </div>
+                <div class="flex items-center pt-6">
+                    <label class="flex items-center gap-2 cursor-pointer text-sm">
+                        <input type="checkbox" id="ew_pinned" class="rounded">
+                        Pin to Top
+                    </label>
                 </div>
             </div>
-            <div class="flex justify-end gap-2 mt-4">
-                <button type="button" onclick="document.getElementById('editWorkModal').classList.add('hidden')" class="px-4 py-2 rounded text-on-surface-variant border border-outline-variant hover:bg-surface-container-low">Cancel</button>
-                <button type="submit" id="submitEditWorkBtn" class="bg-secondary text-on-secondary px-4 py-2 rounded hover:opacity-90">Save Changes</button>
+            <div class="flex justify-end gap-3 mt-2">
+                <button type="button" onclick="document.getElementById('editWorkModal').classList.remove('show')" class="btn-secondary">Cancel</button>
+                <button type="submit" id="submitEditWorkBtn" class="btn-primary">Save Changes</button>
             </div>
         </form>
     </div>
 </div>
 
+<!-- Edit Order Modal -->
+<div id="editOrderModal" class="modal-overlay">
+    <div class="modal-box">
+        <h2><span class="material-symbols-outlined">local_shipping</span> Update Order</h2>
+        <form id="editOrderForm" class="flex flex-col gap-4">
+            <input type="hidden" id="eo_id">
+            
+            <!-- Order Quick Info -->
+            <div class="bg-[#f8fafc] rounded-lg p-4 border border-[#e2e8f0]">
+                <div class="text-xs text-[#94a3b8] font-medium">Order ID</div>
+                <div class="text-sm font-mono font-bold text-[#1a1a2e] mt-1" id="eo_display_id">—</div>
+                <div class="text-xs text-[#94a3b8] font-medium mt-3">Customer</div>
+                <div class="text-sm font-bold text-[#1a1a2e] mt-1" id="eo_display_name">—</div>
+            </div>
+            
+            <div>
+                <label class="form-label">Order Status</label>
+                <select id="eo_status" class="form-input">
+                    <option value="Processing">🟡 Processing</option>
+                    <option value="Shipped">🔵 Shipped</option>
+                    <option value="Delivered">🟢 Delivered</option>
+                    <option value="Cancelled">🔴 Cancelled</option>
+                </select>
+            </div>
+            <div>
+                <label class="form-label">Tracking Details (Optional)</label>
+                <input type="text" id="eo_tracking" class="form-input" placeholder="e.g. BlueDart: AWB123456789">
+                <p class="text-xs text-[#94a3b8] mt-1">Customer can see this on the tracking page</p>
+            </div>
+            <div class="flex justify-end gap-3 mt-2">
+                <button type="button" onclick="document.getElementById('editOrderModal').classList.remove('show')" class="btn-secondary">Cancel</button>
+                <button type="submit" id="submitEditOrderBtn" class="btn-primary flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">save</span>
+                    Update Order
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- ===== JAVASCRIPT ===== -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -309,11 +620,12 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    let activeTab = 'products'; // 'products', 'works', 'orders'
     window.allProducts = [];
     window.allWorks = [];
     window.allOrders = [];
+    let currentOrderFilter = 'all';
 
+    // --- AUTH ---
     onAuthStateChanged(auth, (user) => {
         if (!user) {
             window.location.href = '/login';
@@ -330,40 +642,50 @@
         signOut(auth).then(() => window.location.href = '/login');
     });
 
-    // Tab Switching
-    document.getElementById('tabProducts').addEventListener('click', () => switchTab('products'));
-    document.getElementById('tabWorks').addEventListener('click', () => switchTab('works'));
-    document.getElementById('tabOrders').addEventListener('click', () => switchTab('orders'));
-
-    function switchTab(tab) {
-        activeTab = tab;
-        const tabs = {
-            'products': document.getElementById('tabProducts'),
-            'works': document.getElementById('tabWorks'),
-            'orders': document.getElementById('tabOrders')
-        };
-        const sections = {
-            'products': document.getElementById('sectionProducts'),
-            'works': document.getElementById('sectionWorks'),
-            'orders': document.getElementById('sectionOrders')
-        };
-        
-        Object.keys(tabs).forEach(k => {
-            if (k === tab) {
-                tabs[k].classList.add('border-b-2', 'border-primary', 'text-primary');
-                tabs[k].classList.remove('text-on-surface-variant');
-                sections[k].classList.remove('hidden');
-            } else {
-                tabs[k].classList.remove('border-b-2', 'border-primary', 'text-primary');
-                tabs[k].classList.add('text-on-surface-variant');
-                sections[k].classList.add('hidden');
-            }
-        });
-
-        document.getElementById('addBtn').classList.toggle('hidden', tab !== 'products');
-        document.getElementById('addWorkBtn').classList.toggle('hidden', tab !== 'works');
+    // --- TOAST ---
+    function showToast(msg) {
+        const t = document.getElementById('adminToast');
+        document.getElementById('toastMsg').textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
     }
 
+    // --- SIDEBAR NAVIGATION ---
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    
+    sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+    
+    document.querySelectorAll('.sidebar-link[data-section]').forEach(link => {
+        link.addEventListener('click', () => {
+            const section = link.getAttribute('data-section');
+            switchSection(section);
+            // Close mobile sidebar
+            sidebar.classList.remove('open');
+        });
+    });
+    
+    function switchSection(section) {
+        // Update sidebar active state
+        document.querySelectorAll('.sidebar-link[data-section]').forEach(l => l.classList.remove('active'));
+        document.querySelector(`.sidebar-link[data-section="${section}"]`).classList.add('active');
+        
+        // Show/hide sections
+        document.querySelectorAll('.section-page').forEach(s => s.classList.add('hidden'));
+        document.getElementById(`section${section.charAt(0).toUpperCase() + section.slice(1)}`).classList.remove('hidden');
+    }
+
+    // Back to Orders links
+    document.querySelectorAll('.back-to-orders').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchSection('orders');
+        });
+    });
+
+    // --- IMAGE COMPRESSION ---
     const compressImage = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -386,13 +708,170 @@
         });
     };
 
-    // --- PRODUCTS ---
+    // ===========================
+    //         ORDERS
+    // ===========================
+    async function fetchOrders() {
+        try {
+            const q = query(collection(db, "orders"));
+            const querySnapshot = await getDocs(q);
+            const orders = [];
+            querySnapshot.forEach((d) => orders.push({ id: d.id, ...d.data() }));
+            orders.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+            window.allOrders = orders;
+            
+            // Update stats
+            document.getElementById('totalOrdersCount').innerText = orders.length;
+            document.getElementById('processingCount').innerText = orders.filter(o => (o.orderStatus || 'Processing') === 'Processing').length;
+            document.getElementById('shippedCount').innerText = orders.filter(o => o.orderStatus === 'Shipped').length;
+            document.getElementById('deliveredCount').innerText = orders.filter(o => o.orderStatus === 'Delivered').length;
+            
+            renderOrders();
+        } catch (error) { console.error("Error fetching orders:", error); }
+    }
+
+    // Order filter tabs
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentOrderFilter = tab.getAttribute('data-filter');
+            renderOrders();
+        });
+    });
+
+    function renderOrders() {
+        const container = document.getElementById('orderRows');
+        container.innerHTML = '';
+        
+        let filtered = window.allOrders;
+        if (currentOrderFilter !== 'all') {
+            filtered = window.allOrders.filter(o => (o.orderStatus || 'Processing') === currentOrderFilter);
+        }
+        
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-16">
+                    <span class="material-symbols-outlined text-6xl text-[#cbd5e1]">inbox</span>
+                    <p class="text-[#94a3b8] mt-4 text-sm">No orders found</p>
+                </div>`;
+            return;
+        }
+
+        filtered.forEach(o => {
+            const card = document.createElement('div');
+            card.className = 'order-card';
+
+            const dateStr = new Date(o.dateAdded).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            const status = o.orderStatus || 'Processing';
+            const badgeClass = status === 'Processing' ? 'badge-processing' : status === 'Shipped' ? 'badge-shipped' : status === 'Delivered' ? 'badge-delivered' : 'badge-cancelled';
+            
+            let itemsHtml = '';
+            if (o.items && Array.isArray(o.items)) {
+                o.items.forEach(item => {
+                    itemsHtml += `
+                        <div class="flex items-center gap-3 py-2">
+                            <img src="${item.image}" class="w-10 h-10 rounded-lg object-cover bg-[#f1f5f9]" alt="">
+                            <div class="flex-1 min-w-0">
+                                <div class="text-sm font-medium text-[#1a1a2e] truncate">${item.name}</div>
+                                <div class="text-xs text-[#94a3b8]">Qty: ${item.quantity} × ₹${item.price}</div>
+                            </div>
+                            <div class="text-sm font-bold text-[#1a1a2e]">₹${item.price * item.quantity}</div>
+                        </div>`;
+                });
+            }
+
+            card.innerHTML = `
+                <div class="flex flex-col md:flex-row md:items-start gap-4">
+                    <!-- Left: Order Info -->
+                    <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap items-center gap-3 mb-3">
+                            <span class="badge ${badgeClass}">${status}</span>
+                            <span class="text-xs text-[#94a3b8]">${dateStr}</span>
+                        </div>
+                        <div class="text-xs font-mono text-[#94a3b8] mb-2">ID: ${o.paymentId || o.id}</div>
+                        
+                        <!-- Customer -->
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="material-symbols-outlined text-[16px] text-[#94a3b8]">person</span>
+                            <span class="text-sm font-semibold text-[#1a1a2e]">${o.customerName || 'N/A'}</span>
+                        </div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="material-symbols-outlined text-[16px] text-[#94a3b8]">call</span>
+                            <span class="text-sm text-[#64748b]">${o.customerPhone || 'N/A'}</span>
+                        </div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="material-symbols-outlined text-[16px] text-[#94a3b8]">mail</span>
+                            <span class="text-sm text-[#64748b]">${o.customerEmail || 'N/A'}</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-[#94a3b8] mt-0.5">location_on</span>
+                            <span class="text-sm text-[#64748b]">${o.customerAddress || 'N/A'}</span>
+                        </div>
+                        
+                        ${o.trackingDetails ? `
+                        <div class="mt-3 flex items-center gap-2 bg-[#dbeafe] rounded-lg px-3 py-2">
+                            <span class="material-symbols-outlined text-[16px] text-[#1e40af]">local_shipping</span>
+                            <span class="text-xs font-semibold text-[#1e40af]">${o.trackingDetails}</span>
+                        </div>` : ''}
+                    </div>
+                    
+                    <!-- Right: Items + Total + Action -->
+                    <div class="md:w-[320px] flex-shrink-0">
+                        <div class="bg-[#f8fafc] rounded-lg p-3 border border-[#e2e8f0] mb-3">
+                            ${itemsHtml}
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="text-lg font-bold text-[#1a1a2e]">₹ ${o.totalAmount || 0}</div>
+                            <button class="btn-primary text-sm flex items-center gap-1 edit-order-btn" data-id="${o.id}">
+                                <span class="material-symbols-outlined text-[16px]">edit</span>
+                                Update
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        // Edit Order listeners
+        document.querySelectorAll('.edit-order-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                const order = window.allOrders.find(o => o.id === id);
+                document.getElementById('eo_id').value = id;
+                document.getElementById('eo_status').value = order.orderStatus || 'Processing';
+                document.getElementById('eo_tracking').value = order.trackingDetails || '';
+                document.getElementById('eo_display_id').textContent = order.paymentId || id;
+                document.getElementById('eo_display_name').textContent = order.customerName || 'N/A';
+                document.getElementById('editOrderModal').classList.add('show');
+            });
+        });
+    }
+
+    document.getElementById('editOrderForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('eo_id').value;
+        const payload = {
+            orderStatus: document.getElementById('eo_status').value,
+            trackingDetails: document.getElementById('eo_tracking').value
+        };
+        await updateDoc(doc(db, "orders", id), payload);
+        document.getElementById('editOrderModal').classList.remove('show');
+        document.getElementById('editOrderForm').reset();
+        showToast('Order updated successfully!');
+        fetchOrders();
+    });
+
+    // ===========================
+    //         PRODUCTS
+    // ===========================
     async function fetchProducts() {
         try {
             const q = query(collection(db, "products"));
             const querySnapshot = await getDocs(q);
             const products = [];
-            querySnapshot.forEach((doc) => products.push({ id: doc.id, ...doc.data() }));
+            querySnapshot.forEach((d) => products.push({ id: d.id, ...d.data() }));
             products.reverse();
             products.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
             window.allProducts = products;
@@ -410,56 +889,47 @@
         container.innerHTML = '';
         
         const filterVal = document.getElementById('productFilter').value;
-        let filteredProducts = window.allProducts;
-        if (filterVal === 'Published') {
-            filteredProducts = window.allProducts.filter(p => p.status === 'Published');
-        } else if (filterVal === 'Draft') {
-            filteredProducts = window.allProducts.filter(p => p.status === 'Draft');
-        } else if (filterVal === 'SoldOut') {
-            filteredProducts = window.allProducts.filter(p => p.soldOut === true);
-        }
+        let filtered = window.allProducts;
+        if (filterVal === 'Published') filtered = window.allProducts.filter(p => p.status === 'Published');
+        else if (filterVal === 'Draft') filtered = window.allProducts.filter(p => p.status === 'Draft');
+        else if (filterVal === 'SoldOut') filtered = window.allProducts.filter(p => p.soldOut === true);
 
-        if(filteredProducts.length === 0) {
-            container.innerHTML = '<p class="p-6 text-center text-on-surface-variant">No products found for this filter.</p>';
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-16">
+                    <span class="material-symbols-outlined text-6xl text-[#cbd5e1]">inventory_2</span>
+                    <p class="text-[#94a3b8] mt-4 text-sm">No products found</p>
+                </div>`;
             return;
         }
 
-
-
-        filteredProducts.forEach(p => {
+        filtered.forEach(p => {
             const row = document.createElement('div');
-            row.className = 'grid grid-cols-1 md:grid-cols-12 gap-4 items-center px-6 py-6 bg-white border border-outline-variant rounded hover:border-primary transition-all group mb-4';
-
-            const statusClass = p.status === 'Published' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container-highest text-on-surface-variant';
+            row.className = 'item-row flex flex-col md:flex-row md:items-center gap-4';
             const displayName = p.name_en || p.name;
             const displayDesc = p.desc_en || p.sku;
+            const statusBadge = p.status === 'Published' ? 'badge-published' : 'badge-draft';
 
             row.innerHTML = `
-                <div class="col-span-1 md:col-span-6 flex items-center gap-4 min-w-0">
-                    <div class="w-16 h-16 flex-shrink-0 bg-surface-container-low rounded overflow-hidden">
+                <div class="flex items-center gap-4 flex-1 min-w-0">
+                    <div class="w-14 h-14 flex-shrink-0 bg-[#f1f5f9] rounded-lg overflow-hidden">
                         <img class="w-full h-full object-cover" src="${p.image_url}" alt="img"/>
                     </div>
-                    <div class="min-w-0">
-                        <h4 class="font-label-md text-label-md text-on-surface truncate flex items-center">
+                    <div class="min-w-0 flex-1">
+                        <h4 class="text-sm font-semibold text-[#1a1a2e] truncate flex items-center gap-1">
                             ${displayName}
-                            ${p.pinned ? '<span class="material-symbols-outlined text-[16px] text-primary ml-1" title="Pinned">push_pin</span>' : ''}
+                            ${p.pinned ? '<span class="material-symbols-outlined text-[14px] text-primary">push_pin</span>' : ''}
                         </h4>
-                        <p class="font-body-sm text-body-sm text-on-surface-variant truncate">${displayDesc}</p>
-                        <p class="font-body-sm text-primary font-bold mt-1">₹ ${p.price || '0'}</p>
+                        <p class="text-xs text-[#94a3b8] truncate">${displayDesc}</p>
+                        <p class="text-sm text-primary font-bold mt-0.5">₹ ${p.price || '0'}</p>
                     </div>
                 </div>
-                <div class="col-span-1 md:col-span-3 flex flex-col items-start md:items-center justify-center gap-1 mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-t-0">
-                    <span class="md:hidden text-[10px] font-bold text-on-surface-variant mb-1">STATUS</span>
-                    <span class="${statusClass} px-3 py-1 rounded-full text-[12px] font-semibold">${p.status}</span>
-                    ${p.soldOut ? '<span class="bg-error text-on-error px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest">Sold Out</span>' : ''}
-                </div>
-                <div class="col-span-1 md:col-span-2 flex flex-col items-start md:items-center justify-center font-body-sm text-on-surface-variant mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-t-0">
-                    <span class="md:hidden text-[10px] font-bold text-on-surface-variant mb-1">DATE ADDED</span>
-                    ${p.date_added || 'Unknown'}
-                </div>
-                <div class="col-span-1 md:col-span-1 flex justify-start md:justify-end gap-2 mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-t-0">
-                    <button class="p-2 bg-surface-container text-primary rounded hover:opacity-80 edit-btn" data-id="${p.id}"><span class="material-symbols-outlined text-[20px]">edit</span></button>
-                    <button class="p-2 bg-surface-container text-error rounded hover:opacity-80 delete-btn" data-id="${p.id}"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                    <span class="badge ${statusBadge}">${p.status}</span>
+                    ${p.soldOut ? '<span class="badge badge-soldout">Sold Out</span>' : ''}
+                    <span class="text-xs text-[#94a3b8] hidden md:block">${p.date_added || ''}</span>
+                    <button class="p-2 hover:bg-[#f1f5f9] rounded-lg transition-colors edit-btn" data-id="${p.id}" title="Edit"><span class="material-symbols-outlined text-[20px] text-[#64748b]">edit</span></button>
+                    <button class="p-2 hover:bg-[#fee2e2] rounded-lg transition-colors delete-btn" data-id="${p.id}" title="Delete"><span class="material-symbols-outlined text-[20px] text-[#ef4444]">delete</span></button>
                 </div>
             `;
             container.appendChild(row);
@@ -470,6 +940,7 @@
             btn.addEventListener('click', async () => {
                 if (confirm('Delete this product?')) {
                     await deleteDoc(doc(db, "products", btn.getAttribute('data-id')));
+                    showToast('Product deleted');
                     fetchProducts();
                 }
             });
@@ -489,12 +960,12 @@
                 document.getElementById('e_status').value = product.status;
                 document.getElementById('e_sold_out').checked = product.soldOut === true;
                 document.getElementById('e_pinned').checked = product.pinned === true;
-                document.getElementById('editProductModal').classList.remove('hidden');
+                document.getElementById('editProductModal').classList.add('show');
             });
         });
     }
 
-    document.getElementById('addBtn').addEventListener('click', () => document.getElementById('addProductModal').classList.remove('hidden'));
+    document.getElementById('addBtn').addEventListener('click', () => document.getElementById('addProductModal').classList.add('show'));
     
     document.getElementById('addProductForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -516,8 +987,9 @@
                 date_added: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })
             };
             await addDoc(collection(db, "products"), payload);
-            document.getElementById('addProductModal').classList.add('hidden');
+            document.getElementById('addProductModal').classList.remove('show');
             document.getElementById('addProductForm').reset();
+            showToast('Product added successfully!');
             fetchProducts();
         } catch (error) { alert("Error adding product"); } 
         finally { btn.disabled = false; document.getElementById('uploadStatus').classList.add('hidden'); }
@@ -537,18 +1009,21 @@
             pinned: document.getElementById('e_pinned').checked
         };
         await updateDoc(doc(db, "products", id), payload);
-        document.getElementById('editProductModal').classList.add('hidden');
+        document.getElementById('editProductModal').classList.remove('show');
         document.getElementById('editProductForm').reset();
+        showToast('Product updated!');
         fetchProducts();
     });
 
-    // --- WORKS ---
+    // ===========================
+    //         WORKS
+    // ===========================
     async function fetchWorks() {
         try {
             const q = query(collection(db, "works"));
             const querySnapshot = await getDocs(q);
             const works = [];
-            querySnapshot.forEach((doc) => works.push({ id: doc.id, ...doc.data() }));
+            querySnapshot.forEach((d) => works.push({ id: d.id, ...d.data() }));
             works.reverse();
             works.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
             window.allWorks = works;
@@ -560,45 +1035,40 @@
     function renderWorks() {
         const container = document.getElementById('workRows');
         container.innerHTML = '';
-        if(window.allWorks.length === 0) {
-            container.innerHTML = '<p class="p-6 text-center text-on-surface-variant">No works found. Upload one!</p>';
+        if (window.allWorks.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-16">
+                    <span class="material-symbols-outlined text-6xl text-[#cbd5e1]">photo_library</span>
+                    <p class="text-[#94a3b8] mt-4 text-sm">No work items yet. Add one!</p>
+                </div>`;
             return;
         }
 
-
-
         window.allWorks.forEach(w => {
             const row = document.createElement('div');
-            row.className = 'grid grid-cols-1 md:grid-cols-12 gap-4 items-center px-6 py-6 bg-white border border-outline-variant rounded hover:border-secondary transition-all group mb-4';
-
-            const statusClass = w.status === 'Published' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container-highest text-on-surface-variant';
+            row.className = 'item-row flex flex-col md:flex-row md:items-center gap-4';
             const displayTitle = w.title_en;
             const displayDesc = w.desc_en;
+            const statusBadge = w.status === 'Published' ? 'badge-published' : 'badge-draft';
 
             row.innerHTML = `
-                <div class="col-span-1 md:col-span-6 flex items-center gap-4 min-w-0">
-                    <div class="w-24 h-16 flex-shrink-0 bg-surface-container-low rounded overflow-hidden">
+                <div class="flex items-center gap-4 flex-1 min-w-0">
+                    <div class="w-20 h-14 flex-shrink-0 bg-[#f1f5f9] rounded-lg overflow-hidden">
                         <img class="w-full h-full object-cover" src="${w.image_url}" alt="img"/>
                     </div>
-                    <div class="min-w-0">
-                        <h4 class="font-label-md text-label-md text-on-surface truncate flex items-center">
+                    <div class="min-w-0 flex-1">
+                        <h4 class="text-sm font-semibold text-[#1a1a2e] truncate flex items-center gap-1">
                             ${displayTitle}
-                            ${w.pinned ? '<span class="material-symbols-outlined text-[16px] text-secondary ml-1" title="Pinned">push_pin</span>' : ''}
+                            ${w.pinned ? '<span class="material-symbols-outlined text-[14px] text-primary">push_pin</span>' : ''}
                         </h4>
-                        <p class="font-body-sm text-body-sm text-on-surface-variant truncate">${displayDesc}</p>
+                        <p class="text-xs text-[#94a3b8] truncate">${displayDesc}</p>
                     </div>
                 </div>
-                <div class="col-span-1 md:col-span-3 flex flex-col items-start md:items-center justify-center gap-1 mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-t-0">
-                    <span class="md:hidden text-[10px] font-bold text-on-surface-variant mb-1">STATUS</span>
-                    <span class="${statusClass} px-3 py-1 rounded-full text-[12px] font-semibold">${w.status}</span>
-                </div>
-                <div class="col-span-1 md:col-span-2 flex flex-col items-start md:items-center justify-center font-body-sm text-on-surface-variant mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-t-0">
-                    <span class="md:hidden text-[10px] font-bold text-on-surface-variant mb-1">DATE ADDED</span>
-                    ${w.date_added || 'Unknown'}
-                </div>
-                <div class="col-span-1 md:col-span-1 flex justify-start md:justify-end gap-2 mt-2 md:mt-0 pt-4 md:pt-0 border-t border-outline-variant md:border-t-0">
-                    <button class="p-2 bg-surface-container text-primary rounded hover:opacity-80 edit-work-btn" data-id="${w.id}"><span class="material-symbols-outlined text-[20px]">edit</span></button>
-                    <button class="p-2 bg-surface-container text-error rounded hover:opacity-80 delete-work-btn" data-id="${w.id}"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                    <span class="badge ${statusBadge}">${w.status}</span>
+                    <span class="text-xs text-[#94a3b8] hidden md:block">${w.date_added || ''}</span>
+                    <button class="p-2 hover:bg-[#f1f5f9] rounded-lg transition-colors edit-work-btn" data-id="${w.id}" title="Edit"><span class="material-symbols-outlined text-[20px] text-[#64748b]">edit</span></button>
+                    <button class="p-2 hover:bg-[#fee2e2] rounded-lg transition-colors delete-work-btn" data-id="${w.id}" title="Delete"><span class="material-symbols-outlined text-[20px] text-[#ef4444]">delete</span></button>
                 </div>
             `;
             container.appendChild(row);
@@ -609,6 +1079,7 @@
             btn.addEventListener('click', async () => {
                 if (confirm('Delete this work item?')) {
                     await deleteDoc(doc(db, "works", btn.getAttribute('data-id')));
+                    showToast('Work deleted');
                     fetchWorks();
                 }
             });
@@ -626,12 +1097,12 @@
                 document.getElementById('ew_desc_mr').value = work.desc_mr || '';
                 document.getElementById('ew_status').value = work.status;
                 document.getElementById('ew_pinned').checked = work.pinned === true;
-                document.getElementById('editWorkModal').classList.remove('hidden');
+                document.getElementById('editWorkModal').classList.add('show');
             });
         });
     }
 
-    document.getElementById('addWorkBtn').addEventListener('click', () => document.getElementById('addWorkModal').classList.remove('hidden'));
+    document.getElementById('addWorkBtn').addEventListener('click', () => document.getElementById('addWorkModal').classList.add('show'));
 
     document.getElementById('addWorkForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -651,8 +1122,9 @@
                 date_added: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' })
             };
             await addDoc(collection(db, "works"), payload);
-            document.getElementById('addWorkModal').classList.add('hidden');
+            document.getElementById('addWorkModal').classList.remove('show');
             document.getElementById('addWorkForm').reset();
+            showToast('Work added successfully!');
             fetchWorks();
         } catch (error) { alert("Error adding work"); } 
         finally { btn.disabled = false; document.getElementById('workUploadStatus').classList.add('hidden'); }
@@ -670,66 +1142,11 @@
             pinned: document.getElementById('ew_pinned').checked
         };
         await updateDoc(doc(db, "works", id), payload);
-        document.getElementById('editWorkModal').classList.add('hidden');
+        document.getElementById('editWorkModal').classList.remove('show');
         document.getElementById('editWorkForm').reset();
+        showToast('Work updated!');
         fetchWorks();
     });
-
-    // --- ORDERS ---
-    async function fetchOrders() {
-        try {
-            const q = query(collection(db, "orders"));
-            const querySnapshot = await getDocs(q);
-            const orders = [];
-            querySnapshot.forEach((doc) => orders.push({ id: doc.id, ...doc.data() }));
-            orders.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-            window.allOrders = orders;
-            document.getElementById('totalOrdersCount').innerText = orders.length;
-            renderOrders();
-        } catch (error) { console.error("Error fetching orders:", error); }
-    }
-
-    function renderOrders() {
-        const container = document.getElementById('orderRows');
-        container.innerHTML = '';
-        if(window.allOrders.length === 0) {
-            container.innerHTML = '<p class="p-6 text-center text-on-surface-variant">No orders found.</p>';
-            return;
-        }
-
-        window.allOrders.forEach(o => {
-            const row = document.createElement('div');
-            row.className = 'grid grid-cols-1 md:grid-cols-12 gap-4 items-center px-6 py-6 bg-white border border-outline-variant rounded hover:border-primary transition-all mb-4';
-
-            const dateStr = new Date(o.dateAdded).toLocaleString();
-            let itemsHtml = '<ul class="list-disc list-inside text-xs">';
-            if(o.items && Array.isArray(o.items)) {
-                o.items.forEach(item => {
-                    itemsHtml += `<li>${item.quantity}x ${item.name} (₹${item.price})</li>`;
-                });
-            }
-            itemsHtml += '</ul>';
-
-            row.innerHTML = `
-                <div class="col-span-1 md:col-span-3">
-                    <div class="font-bold text-sm text-on-surface">${dateStr}</div>
-                    <div class="text-xs text-on-surface-variant mt-1 font-mono">ID: ${o.paymentId || o.id}</div>
-                </div>
-                <div class="col-span-1 md:col-span-4">
-                    <div class="font-bold text-sm text-on-surface">${o.customerName || 'N/A'}</div>
-                    <div class="text-xs text-on-surface-variant">${o.customerEmail || 'N/A'} | ${o.customerPhone || 'N/A'}</div>
-                    <div class="text-xs text-on-surface-variant mt-1 italic">${o.customerAddress || 'N/A'}</div>
-                </div>
-                <div class="col-span-1 md:col-span-3 text-on-surface-variant">
-                    ${itemsHtml}
-                </div>
-                <div class="col-span-1 md:col-span-2 text-left md:text-right font-bold text-primary text-lg">
-                    ₹ ${o.totalAmount || 0}
-                </div>
-            `;
-            container.appendChild(row);
-        });
-    }
 
     window.addEventListener('languageChanged', () => {
         if(window.allProducts.length > 0) renderProducts();
@@ -737,5 +1154,4 @@
     });
 </script>
 <script src="/translations.js"></script>
-</body>
-</html>
+</body></html>

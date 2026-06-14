@@ -66,6 +66,9 @@
         <button id="lang-en" class="relative z-10 w-1/2 h-full flex items-center justify-center text-[13px] font-medium transition-colors cursor-pointer text-on-primary">English</button>
         <button id="lang-mr" class="relative z-10 w-1/2 h-full flex items-center justify-center text-[13px] font-medium transition-colors cursor-pointer text-on-surface-variant">मराठी</button>
     </div>
+    <a href="/track.html" class="hidden sm:flex p-1 text-on-surface hover:text-primary transition-colors" title="Track Order">
+        <span class="material-symbols-outlined text-[28px]">local_shipping</span>
+    </a>
     <button id="menu-btn" class="p-1 text-on-surface hover:text-primary transition-colors">
         <span class="material-symbols-outlined text-3xl">more_vert</span>
     </button>
@@ -165,6 +168,7 @@
         <a href="#aboutSection" class="hover:text-primary transition-colors" data-i18n="About">About</a>
         <a href="/index.html#productGrid" class="hover:text-primary transition-colors" data-i18n="Our Collection">Our Collection</a>
         <a href="/index.html#workGrid" class="hover:text-primary transition-colors" data-i18n="Our Work">Our Work</a>
+        <a href="/track.html" class="hover:text-primary transition-colors text-primary font-bold">Track Order</a>
         <a href="/index.html" class="hover:text-primary transition-colors" data-i18n="Contact Us">Contact Us</a>
     </div>
 </div>
@@ -303,7 +307,9 @@
                             items: items,
                             totalAmount: total,
                             paymentId: response.razorpay_payment_id,
-                            dateAdded: new Date().toISOString()
+                            dateAdded: new Date().toISOString(),
+                            orderStatus: 'Processing',
+                            trackingDetails: ''
                         };
                         await addDoc(collection(db, "orders"), orderPayload);
                     } catch(e) {
