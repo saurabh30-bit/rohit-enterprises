@@ -17,6 +17,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
@@ -105,16 +106,7 @@
         </div>
 
         <!-- Right: 3D Motion Graphic -->
-        <div class="flex-1 flex justify-center items-center w-full min-h-[300px]">
-            <div class="isometric-container">
-                <div class="isometric-layer" style="--z: 0px; --delay: 0s; --bg: rgba(39,62,54,0.1);"></div>
-                <div class="isometric-layer" style="--z: 40px; --delay: 0.2s; --bg: rgba(39,62,54,0.3);"></div>
-                <div class="isometric-layer" style="--z: 80px; --delay: 0.4s; --bg: rgba(39,62,54,0.6);"></div>
-                <div class="isometric-layer" style="--z: 120px; --delay: 0.6s; --bg: rgba(39,62,54,0.9);">
-                    <!-- Glowing floating sphere at the top -->
-                    <div class="absolute inset-0 m-auto w-8 h-8 bg-[#ffd931] rounded-full blur-[2px] shadow-[0_0_20px_#ffd931] animate-pulse"></div>
-                </div>
-            </div>
+        <div class="flex-1 flex justify-center items-center w-full min-h-[400px]" id="enterprise-3d-graphic">
         </div>
     </div>
 </section>
@@ -832,6 +824,79 @@
 </script>
 
 <script src="/translations.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    // Enterprise 3D Motion Graphic (Three.js Globe)
+    document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById('enterprise-3d-graphic');
+        if(!container || typeof THREE === 'undefined') return;
 
+        const scene = new THREE.Scene();
+        // Transparent background
+        scene.background = null; 
 
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // Enterprise Globe Geometry
+        // Icosahedron with detail 2 looks like a high-tech geometric globe network
+        const geometry = new THREE.IcosahedronGeometry(2, 2); 
+        
+        // Material using brand colors (Pine Green wireframe)
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0x273e36, 
+            wireframe: true,
+            transparent: true,
+            opacity: 0.4
+        });
+        
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
+
+        // Add an inner solid sphere for depth
+        const innerGeometry = new THREE.IcosahedronGeometry(1.9, 2);
+        const innerMaterial = new THREE.MeshBasicMaterial({
+            color: 0xffd931, // Warm Amber
+            transparent: true,
+            opacity: 0.05
+        });
+        const innerSphere = new THREE.Mesh(innerGeometry, innerMaterial);
+        scene.add(innerSphere);
+
+        camera.position.z = 6;
+
+        // Animation Loop
+        const animate = function () {
+            requestAnimationFrame(animate);
+            // Rotate the network
+            sphere.rotation.x += 0.002;
+            sphere.rotation.y += 0.003;
+            
+            innerSphere.rotation.x -= 0.001;
+            innerSphere.rotation.y -= 0.002;
+            
+            // Add a floating bob effect
+            const time = Date.now() * 0.001;
+            sphere.position.y = Math.sin(time) * 0.2;
+            innerSphere.position.y = Math.sin(time) * 0.2;
+
+            renderer.render(scene, camera);
+        };
+
+        animate();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            if(container) {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            }
+        });
+    });
+</script>
 </body></html>
