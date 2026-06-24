@@ -499,7 +499,7 @@ header button:hover, nav button:hover {
 
 /* Cards (Tiles) */
 
-.bg-surface {
+.group.bg-surface, #detailsModal > div {
   border-width: 2px !important;
   border-color: #273e36 !important;
   /* Pine Green permanent highlight */
@@ -2113,12 +2113,6 @@ footer {
 
 .hover\:opacity-90:hover {
   opacity: 0.9;
-}
-
-.hover\:shadow-lg:hover {
-  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 .hover\:shadow-xl:hover {

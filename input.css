@@ -48,7 +48,7 @@
     }
 
     /* Cards (Tiles) */
-    .bg-surface {
+    .group.bg-surface, #detailsModal > div {
         border-width: 2px !important;
         border-color: #273e36 !important; /* Pine Green permanent highlight */
         border-radius: 1rem !important; /* rounded-2xl */
