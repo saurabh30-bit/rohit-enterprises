@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="/output.css">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
@@ -91,12 +92,24 @@
 </header>
 <main>
 <!-- Hero Section -->
-<section class="py-12 md:py-20 px-4 md:px-margin-desktop max-w-container-max mx-auto text-center">
-<p class="uppercase tracking-[0.3em] text-on-surface-variant font-label-md text-label-md mb-6"><span data-i18n="Trusted Enterprise">🇮🇳 YOUR TRUSTED ENTERPRISE 🇮🇳</span></p>
-<h1 class="hero-title mb-8 max-w-4xl mx-auto" data-i18n="Pranav Enterprises">
+<section class="relative py-12 md:py-20 px-4 md:px-margin-desktop max-w-container-max mx-auto text-center overflow-hidden">
+    <!-- 3D Motion Graphic Cube Background -->
+    <div class="cube-container">
+        <div class="cube">
+            <div class="cube-face cube-face-front"></div>
+            <div class="cube-face cube-face-right"></div>
+            <div class="cube-face cube-face-back"></div>
+            <div class="cube-face cube-face-left"></div>
+            <div class="cube-face cube-face-top"></div>
+            <div class="cube-face cube-face-bottom"></div>
+        </div>
+    </div>
+    
+<p class="uppercase tracking-[0.3em] text-on-surface-variant font-label-md text-label-md mb-6 relative z-10"><span data-i18n="Trusted Enterprise">🇮🇳 YOUR TRUSTED ENTERPRISE 🇮🇳</span></p>
+<h1 class="hero-title mb-8 max-w-4xl mx-auto relative z-10" data-i18n="Pranav Enterprises">
                 Pranav Enterprises
             </h1>
-<p class="hero-tagline mb-10 max-w-2xl mx-auto"><span data-i18n="Quality Trust">✨ Delivering Quality, Building Trust ✨</span></p>
+<p class="hero-tagline mb-10 max-w-2xl mx-auto relative z-10"><span data-i18n="Quality Trust">✨ Delivering Quality, Building Trust ✨</span></p>
 </section>
 
 <!-- Product Gallery Section -->
@@ -371,6 +384,16 @@
             } else {
                 loadMoreContainer.classList.add('hidden');
             }
+            
+            // Apply 3D Tilt Effect
+            if (typeof VanillaTilt !== 'undefined') {
+                VanillaTilt.init(document.querySelectorAll(".group.bg-surface"), {
+                    max: 8,
+                    speed: 400,
+                    glare: true,
+                    "max-glare": 0.2,
+                });
+            }
         }
         
         let allWorks = [];
@@ -410,6 +433,16 @@
                 loadMoreContainer.classList.remove('hidden');
             } else {
                 loadMoreContainer.classList.add('hidden');
+            }
+
+            // Apply 3D Tilt Effect
+            if (typeof VanillaTilt !== 'undefined') {
+                VanillaTilt.init(document.querySelectorAll(".group.bg-surface"), {
+                    max: 8,
+                    speed: 400,
+                    glare: true,
+                    "max-glare": 0.2,
+                });
             }
         }
 
