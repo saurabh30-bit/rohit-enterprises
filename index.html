@@ -10,6 +10,18 @@
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="description" content="Pranav Enterprises - Your trusted source for professional enterprise solutions and products.">
+<meta name="theme-color" content="#273e36">
+<meta property="og:title" content="Pranav Enterprises | Professional Solutions">
+<meta property="og:description" content="Your trusted source for professional enterprise solutions and products.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.gstatic.com">
 <title>Pranav Enterprises | Professional Solutions</title>
 <link rel="icon" href="/logo.png" type="image/png">
@@ -17,7 +29,6 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
@@ -105,8 +116,22 @@
             <a href="#productGrid" class="inline-block border-2 border-primary text-primary px-8 py-3 font-bold uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-colors rounded-full shadow-sm">Explore Collection</a>
         </div>
 
-        <!-- Right: 3D Motion Graphic -->
-        <div class="flex-1 flex justify-center items-center w-full min-h-[400px]" id="enterprise-3d-graphic">
+        <!-- Right: Corporate Enterprise Visual -->
+        <div class="flex-1 w-full flex justify-center lg:justify-end relative h-[350px] md:h-[450px] mt-8 md:mt-0">
+            <div class="relative w-full max-w-md h-full rounded-2xl overflow-hidden shadow-2xl border-4 border-surface group">
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" alt="Enterprise Corporate Headquarters" class="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110">
+                <div class="absolute inset-0 bg-[#273e36] mix-blend-multiply opacity-20"></div>
+            </div>
+            <!-- Floating Trust Badge -->
+            <div class="absolute -bottom-6 md:bottom-12 -left-4 md:-left-8 bg-surface p-4 rounded-xl shadow-xl border border-outline-variant flex items-center gap-4 z-20 hidden sm:flex">
+                <div class="bg-[#273e36]/10 p-3 rounded-full text-[#273e36]">
+                    <span class="material-symbols-outlined text-3xl">verified_user</span>
+                </div>
+                <div class="text-left">
+                    <p class="font-bold text-on-surface">ISO 9001:2015</p>
+                    <p class="text-sm text-on-surface-variant">Certified Enterprise</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -824,79 +849,4 @@
 </script>
 
 <script src="/translations.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-    // Enterprise 3D Motion Graphic (Three.js Globe)
-    document.addEventListener("DOMContentLoaded", () => {
-        const container = document.getElementById('enterprise-3d-graphic');
-        if(!container || typeof THREE === 'undefined') return;
-
-        const scene = new THREE.Scene();
-        // Transparent background
-        scene.background = null; 
-
-        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        container.appendChild(renderer.domElement);
-
-        // Enterprise Globe Geometry
-        // Icosahedron with detail 2 looks like a high-tech geometric globe network
-        const geometry = new THREE.IcosahedronGeometry(2, 2); 
-        
-        // Material using brand colors (Pine Green wireframe)
-        const material = new THREE.MeshBasicMaterial({ 
-            color: 0x273e36, 
-            wireframe: true,
-            transparent: true,
-            opacity: 0.4
-        });
-        
-        const sphere = new THREE.Mesh(geometry, material);
-        scene.add(sphere);
-
-        // Add an inner solid sphere for depth
-        const innerGeometry = new THREE.IcosahedronGeometry(1.9, 2);
-        const innerMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffd931, // Warm Amber
-            transparent: true,
-            opacity: 0.05
-        });
-        const innerSphere = new THREE.Mesh(innerGeometry, innerMaterial);
-        scene.add(innerSphere);
-
-        camera.position.z = 6;
-
-        // Animation Loop
-        const animate = function () {
-            requestAnimationFrame(animate);
-            // Rotate the network
-            sphere.rotation.x += 0.002;
-            sphere.rotation.y += 0.003;
-            
-            innerSphere.rotation.x -= 0.001;
-            innerSphere.rotation.y -= 0.002;
-            
-            // Add a floating bob effect
-            const time = Date.now() * 0.001;
-            sphere.position.y = Math.sin(time) * 0.2;
-            innerSphere.position.y = Math.sin(time) * 0.2;
-
-            renderer.render(scene, camera);
-        };
-
-        animate();
-
-        // Handle Resize
-        window.addEventListener('resize', () => {
-            if(container) {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
-            }
-        });
-    });
-</script>
 </body></html>
