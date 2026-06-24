@@ -101,16 +101,21 @@
 <p class="font-body-md text-body-md text-on-surface-variant mb-8" data-i18n="Collection Desc">Browse our best and finest selections.</p>
 </div>
 <div class="max-w-2xl mx-auto w-full flex flex-col sm:flex-row gap-4 px-4">
-    <input type="text" id="searchInput" placeholder="Search products..." class="flex-1 p-3 border border-outline-variant rounded bg-surface focus:border-primary outline-none">
-    <select id="stockFilter" class="p-3 border border-outline-variant rounded bg-surface focus:border-primary outline-none">
+    <input type="text" id="searchInput" aria-label="Search products" placeholder="Search products..." class="flex-1 p-3 border border-outline-variant rounded bg-surface focus:border-primary outline-none">
+    <select id="stockFilter" aria-label="Filter by stock status" class="p-3 border border-outline-variant rounded bg-surface focus:border-primary outline-none">
         <option value="all">All Products</option>
         <option value="in_stock">In Stock</option>
     </select>
 </div>
 </div>
-<div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
+<div id="productGrid" class="grid grid-cols-2 md:grid-cols-4 gap-gutter w-full">
     <!-- Products will be dynamically loaded here from Firebase -->
-    <p class="col-span-full text-center text-on-surface-variant font-body-md py-12">Loading products...</p>
+    <div class="col-span-2 md:col-span-4 grid grid-cols-2 md:grid-cols-4 gap-gutter w-full">
+        <div class="bg-surface animate-pulse h-72 rounded-2xl border-2 border-primary"></div>
+        <div class="bg-surface animate-pulse h-72 rounded-2xl border-2 border-primary"></div>
+        <div class="bg-surface animate-pulse h-72 rounded-2xl border-2 border-primary hidden md:block"></div>
+        <div class="bg-surface animate-pulse h-72 rounded-2xl border-2 border-primary hidden md:block"></div>
+    </div>
 </div>
 <!-- View More Button -->
 <div id="loadMoreContainer" class="mt-16 text-center hidden">
@@ -129,8 +134,13 @@
 <p class="font-body-md text-body-md text-on-surface-variant" data-i18n="Work Desc">Discover our portfolio of creative and successful projects.</p>
 </div>
 </div>
-<div id="workGrid" class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
-    <p class="col-span-full text-center text-on-surface-variant font-body-md py-12">Loading work...</p>
+<div id="workGrid" class="grid grid-cols-2 md:grid-cols-4 gap-gutter w-full">
+    <div class="col-span-2 md:col-span-4 grid grid-cols-2 md:grid-cols-4 gap-gutter w-full">
+        <div class="bg-surface animate-pulse h-72 rounded-2xl border-2 border-primary"></div>
+        <div class="bg-surface animate-pulse h-72 rounded-2xl border-2 border-primary"></div>
+        <div class="bg-surface animate-pulse h-72 rounded-2xl border-2 border-primary hidden md:block"></div>
+        <div class="bg-surface animate-pulse h-72 rounded-2xl border-2 border-primary hidden md:block"></div>
+    </div>
 </div>
 <!-- View More Button -->
 <div id="loadMoreContainerWork" class="mt-16 text-center hidden">
@@ -255,7 +265,7 @@
                     <div class="relative">
                         ${pinSticker}
                         ${soldOutBadge}
-                        <img class="${imgClass}" src="${p.image_url}" alt="${displayName}"/>
+                        <img class="${imgClass}" loading="lazy" src="${p.image_url}" alt="${displayName}"/>
                     </div>
                     <h3 class="font-headline-sm text-headline-sm text-on-background mb-1 md:mb-2 text-sm md:text-xl truncate">${displayName}</h3>
                     <p class="font-body-md text-primary font-bold mb-4">₹ ${p.price || '0'}</p>
@@ -335,7 +345,7 @@
                     <div class="relative">
                         ${pinSticker}
                         ${soldOutBadge}
-                        <img class="${imgClass}" src="${p.image_url}" alt="${displayName}"/>
+                        <img class="${imgClass}" loading="lazy" src="${p.image_url}" alt="${displayName}"/>
                     </div>
                     <h3 class="font-headline-sm text-headline-sm text-on-background mb-1 md:mb-2 text-sm md:text-xl truncate">${displayName}</h3>
                     <p class="font-body-md text-primary font-bold mb-4">₹ ${p.price || '0'}</p>
@@ -378,7 +388,7 @@
                 card.innerHTML = `
                     <div class="relative">
                         ${pinSticker}
-                        <img class="w-full aspect-square object-cover mb-4 transition-all duration-500" src="${w.image_url}" alt="${displayTitle}"/>
+                        <img class="w-full aspect-square object-cover mb-4 transition-all duration-500" loading="lazy" src="${w.image_url}" alt="${displayTitle}"/>
                     </div>
                     <h3 class="font-headline-sm text-headline-sm text-on-background mb-1 md:mb-4 text-sm md:text-xl truncate">${displayTitle}</h3>
                     <button class="mt-auto border border-outline text-on-surface hover:bg-surface-variant py-2 px-4 rounded text-label-md font-label-md transition-colors w-full" onclick="openDetailsModalForWork('${w.id}')">${detailsText}</button>
