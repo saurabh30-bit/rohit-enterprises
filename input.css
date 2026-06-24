@@ -3,6 +3,18 @@
 @tailwind utilities;
 
 @layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    ::selection {
+        background-color: #273e36; /* primary */
+        color: #ffffff;
+    }
+
     /* Premium Earthy Border Highlights */
     
     /* Input and Select */
