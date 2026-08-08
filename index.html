@@ -341,6 +341,9 @@
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-xl border border-gray-200 p-3 flex flex-col hover:shadow-md transition-shadow duration-200';
                 
+                const soldOutBadge = w.soldOut ? '<div class="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10">SOLD OUT</div>' : '';
+                const imgClass = w.soldOut ? 'w-full aspect-square object-cover rounded-lg mb-3 opacity-50' : 'w-full aspect-square object-cover rounded-lg mb-3';
+
                 const currentLang = window.currentLang || 'en';
                 const displayTitle = currentLang === 'mr' && w.title_mr ? w.title_mr : w.title_en;
                 const detailsText = currentLang === 'mr' ? 'तपशील पहा' : 'View Details';
@@ -349,9 +352,11 @@
                 card.innerHTML = `
                     <div class="relative">
                         ${pinSticker}
-                        <img class="w-full aspect-square object-cover rounded-lg mb-3" loading="lazy" src="${w.image_url}" alt="${displayTitle}"/>
+                        ${soldOutBadge}
+                        <img class="${imgClass}" loading="lazy" src="${w.image_url}" alt="${displayTitle}"/>
                     </div>
-                    <h3 class="text-sm font-semibold text-gray-800 truncate mb-2">${displayTitle}</h3>
+                    <h3 class="text-sm font-semibold text-gray-800 truncate mb-1">${displayTitle}</h3>
+                    <p class="text-sm font-bold text-[#10B981] mb-2">₹ ${w.price || '0'}</p>
                     <button class="mt-auto w-full border border-gray-200 text-gray-600 hover:bg-gray-50 py-1.5 rounded-lg text-xs font-medium transition-colors" onclick="openDetailsModalForWork('${w.id}')">${detailsText}</button>
                 `;
                 grid.appendChild(card);
@@ -460,13 +465,48 @@
             const work = allWorks.find(w => w.id === id);
             if(!work) return;
             const currentLang = window.currentLang || 'en';
+            const displayTitle = currentLang === 'mr' && work.title_mr ? work.title_mr : work.title_en;
             
             document.getElementById('modalImage').src = work.image_url;
-            document.getElementById('modalTitle').textContent = currentLang === 'mr' && work.title_mr ? work.title_mr : work.title_en;
+            document.getElementById('modalTitle').textContent = displayTitle;
+            document.getElementById('modalPrice').textContent = `₹ ${work.price || '0'}`;
             document.getElementById('modalDesc').textContent = currentLang === 'mr' && work.desc_mr ? work.desc_mr : work.desc_en;
-            document.getElementById('modalSoldOut').classList.add('hidden');
-            document.getElementById('buyNowBtn').classList.add('hidden');
-            document.getElementById('addToCartModalBtn').classList.add('hidden');
+            
+            const soldOutBadge = document.getElementById('modalSoldOut');
+            const buyNowBtn = document.getElementById('buyNowBtn');
+            const addToCartBtn = document.getElementById('addToCartModalBtn');
+            
+            if (work.soldOut) {
+                soldOutBadge.classList.remove('hidden');
+                buyNowBtn.classList.add('hidden');
+                addToCartBtn.classList.add('hidden');
+            } else {
+                soldOutBadge.classList.add('hidden');
+                buyNowBtn.classList.remove('hidden');
+                addToCartBtn.classList.remove('hidden');
+                
+                buyNowBtn.onclick = function() {
+                    localStorage.setItem('pranav_buy_now', JSON.stringify({
+                        id: work.id,
+                        name: displayTitle,
+                        price: work.price ? parseInt(work.price) : 0,
+                        image: work.image_url,
+                        quantity: 1
+                    }));
+                    window.location.href = '/checkout.html?mode=buy_now';
+                };
+
+                addToCartBtn.onclick = function() {
+                    addToCart({
+                        id: work.id,
+                        name: displayTitle,
+                        price: work.price ? parseInt(work.price) : 0,
+                        image: work.image_url
+                    });
+                    showToast("Added to cart!");
+                    closeDetailsModal();
+                };
+            }
             
             document.getElementById('detailsModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
