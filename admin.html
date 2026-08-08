@@ -385,10 +385,14 @@
                 <label class="form-label">Description (Marathi)</label>
                 <input type="text" id="p_desc_mr" class="form-input" placeholder="वर्णन">
             </div>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-3 gap-4">
                 <div>
                     <label class="form-label">Price (₹) *</label>
                     <input type="number" id="p_price" required min="0" class="form-input" placeholder="0">
+                </div>
+                <div>
+                    <label class="form-label">Quantity</label>
+                    <input type="number" id="p_quantity" min="0" class="form-input" placeholder="∞">
                 </div>
                 <div>
                     <label class="form-label">Status</label>
@@ -443,10 +447,14 @@
                 <label class="form-label">Description (Marathi)</label>
                 <input type="text" id="e_desc_mr" class="form-input">
             </div>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-3 gap-4">
                 <div>
                     <label class="form-label">Price (₹) *</label>
                     <input type="number" id="e_price" required min="0" class="form-input">
+                </div>
+                <div>
+                    <label class="form-label">Quantity</label>
+                    <input type="number" id="e_quantity" min="0" class="form-input" placeholder="∞">
                 </div>
                 <div>
                     <label class="form-label">Status</label>
@@ -957,6 +965,7 @@
                 document.getElementById('e_desc_en').value = product.desc_en || product.sku || '';
                 document.getElementById('e_desc_mr').value = product.desc_mr || '';
                 document.getElementById('e_price').value = product.price || '';
+                document.getElementById('e_quantity').value = product.quantity !== undefined ? product.quantity : '';
                 document.getElementById('e_status').value = product.status;
                 document.getElementById('e_sold_out').checked = product.soldOut === true;
                 document.getElementById('e_pinned').checked = product.pinned === true;
@@ -980,6 +989,7 @@
                 desc_en: document.getElementById('p_desc_en').value,
                 desc_mr: document.getElementById('p_desc_mr').value,
                 price: document.getElementById('p_price').value,
+                quantity: document.getElementById('p_quantity').value,
                 status: document.getElementById('p_status').value,
                 soldOut: document.getElementById('p_sold_out').checked,
                 pinned: document.getElementById('p_pinned').checked,
@@ -1004,6 +1014,7 @@
             desc_en: document.getElementById('e_desc_en').value,
             desc_mr: document.getElementById('e_desc_mr').value,
             price: document.getElementById('e_price').value,
+            quantity: document.getElementById('e_quantity').value,
             status: document.getElementById('e_status').value,
             soldOut: document.getElementById('e_sold_out').checked,
             pinned: document.getElementById('e_pinned').checked
