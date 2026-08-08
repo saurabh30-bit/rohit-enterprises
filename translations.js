@@ -1,7 +1,7 @@
 // Translation Dictionary
 const translations = {
-    "Pranav Enterprises": {
-        "en": "Pranav Enterprises",
+    "MicroMart": {
+        "en": "MicroMart",
         "mr": "प्रणव एंटरप्रायजेस"
     },
     "India's Best Theka": {
@@ -16,8 +16,8 @@ const translations = {
         "en": "Our Products",
         "mr": "आमची उत्पादने"
     },
-    "Our Work": {
-        "en": "Our Work",
+    "Everyday Essentials": {
+        "en": "Everyday Essentials",
         "mr": "आमचे काम"
     },
     "Load More": {
@@ -181,7 +181,7 @@ const translations = {
         "mr": "ई-मेल"
     },
     "Copyright Text": {
-        "en": "© 2024 Pranav Enterprises. All rights reserved.",
+        "en": "© 2024 MicroMart. All rights reserved.",
         "mr": "© २०२४ प्रणव एंटरप्रायजेस. सर्व हक्क राखीव."
     },
     "Privacy Policy": {
@@ -237,11 +237,11 @@ const translations = {
         "mr": "अपॉइंटमेंट बुक करा"
     },
     "About Us": {
-        "en": "About Pranav Enterprises",
+        "en": "About MicroMart",
         "mr": "प्रणव एंटरप्रायजेस बद्दल"
     },
     "About Desc 1": {
-        "en": "Located in the heart of Sawantwadi, Sindhudurg, Pranav Enterprises is built on a foundation of trust and a relentless commitment to excellence. We have been providing top-tier professional solutions and products that our community relies on.",
+        "en": "Located in the heart of Sawantwadi, Sindhudurg, MicroMart is built on a foundation of trust and a relentless commitment to excellence. We have been providing top-tier professional solutions and products that our community relies on.",
         "mr": "सावंतवाडी, सिंधुदुर्गच्या मध्यभागी स्थित, प्रणव एंटरप्रायजेस विश्वासाच्या पायावर आणि उत्कृष्टतेच्या निरंतर वचनबद्धतेवर बांधले गेले आहे. आम्ही आमच्या समुदायासाठी उत्कृष्ट व्यावसायिक उपाय आणि उत्पादने प्रदान करत आहोत."
     },
     "About Desc 2": {
@@ -269,15 +269,15 @@ const translations = {
         "mr": "आमच्या सर्वोत्तम आणि उत्कृष्ट निवडी ब्राउझ करा."
     },
     "Work Desc": {
-        "en": "Discover our portfolio of creative and successful projects.",
+        "en": "Daily household, hygiene, and personal care products delivered fast.",
         "mr": "आमच्या सर्जनशील आणि यशस्वी प्रकल्पांचा पोर्टफोलिओ शोधा."
     },
     "Trusted Enterprise": {
-        "en": "🇮🇳 YOUR TRUSTED ENTERPRISE 🇮🇳",
+        "en": "🇮🇳 YOUR LOCAL NEIGHBORHOOD MARKET 🇮🇳",
         "mr": "🇮🇳 तुमचा विश्वासार्ह उद्योग 🇮🇳"
     },
-    "Pranav Enterprises": {
-        "en": "Pranav Enterprises",
+    "MicroMart": {
+        "en": "MicroMart",
         "mr": "प्रणव एंटरप्रायजेस"
     },
     "Quality Trust": {

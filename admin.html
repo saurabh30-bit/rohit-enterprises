@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Admin Panel | Pranav Enterprises</title>
+<title>Admin Panel | MicroMart</title>
 <link rel="stylesheet" href="/output.css">
 <link rel="icon" href="/logo.png" type="image/png">
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
@@ -129,8 +129,15 @@
                 <span class="material-symbols-outlined text-2xl">menu</span>
             </button>
             <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                <img src="/logo.png" alt="Logo" class="w-9 h-9 rounded-full object-cover shadow-sm"/>
-                <span class="text-lg font-bold text-[#1a1a2e] hidden sm:block" style="font-family: 'Playfair Display', serif;">Pranav Enterprises</span>
+                <div class="flex items-center gap-1.5">
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="#10B981" fill-opacity="0.1" stroke="#10B981" stroke-width="1.5"></path>
+        <circle cx="12" cy="10" r="3" fill="#10B981"></circle>
+        <path d="M6 19l2-8h8l2 8H6z" fill="#10B981" stroke="#10B981"></path>
+    </svg>
+    <span class="text-xl md:text-2xl font-bold tracking-tight text-on-surface" style="font-family: 'Inter', sans-serif;">Micro<span style="color: #10B981">Mart</span></span>
+</div>
+                <span class="text-lg font-bold text-[#1a1a2e] hidden sm:block" style="font-family: 'Playfair Display', serif;">MicroMart</span>
             </a>
         </div>
         <div class="flex items-center gap-3">
@@ -181,7 +188,7 @@
         
         <div class="sidebar-link" data-section="works" id="navWorks">
             <span class="material-symbols-outlined">photo_library</span>
-            Work Gallery
+            Everyday Essentials
         </div>
     </div>
     
@@ -330,7 +337,7 @@
         <div>
             <h1 class="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
                 <span class="material-symbols-outlined text-[28px]">photo_library</span>
-                Work Gallery
+                Everyday Essentials
             </h1>
             <p class="text-sm text-[#64748b] mt-1">Showcase your completed projects</p>
         </div>
@@ -369,6 +376,11 @@
     <div class="modal-box">
         <h2><span class="material-symbols-outlined">add_circle</span> New Product</h2>
         <form id="addProductForm" class="flex flex-col gap-4">
+            <div>
+                <label class="form-label">Target Pincode / Service Area</label>
+                <input type="text" id="p_pincode" class="form-input" value="416602" readonly>
+            </div>
+
             <div>
                 <label class="form-label">Product Name (English) *</label>
                 <input type="text" id="p_name_en" required class="form-input" placeholder="Enter product name">
@@ -430,6 +442,11 @@
     <div class="modal-box">
         <h2><span class="material-symbols-outlined">edit</span> Edit Product</h2>
         <form id="editProductForm" class="flex flex-col gap-4">
+            <div>
+                <label class="form-label">Target Pincode / Service Area</label>
+                <input type="text" id="e_pincode" class="form-input" value="416602" readonly>
+            </div>
+
             <input type="hidden" id="e_id">
             <div>
                 <label class="form-label">Product Name (English) *</label>
@@ -928,6 +945,7 @@
                             ${displayName}
                             ${p.pinned ? '<span class="material-symbols-outlined text-[14px] text-primary">push_pin</span>' : ''}
                         </h4>
+                            <div class="mt-1 text-xs font-bold bg-[#E8F5E9] text-[#10B981] inline-flex items-center gap-1 px-2 py-0.5 rounded w-fit"><span class="material-symbols-outlined text-[12px]">my_location</span>Service Area: 416602 (Kankavli)</div>
                         <p class="text-xs text-[#94a3b8] truncate">${displayDesc}</p>
                         <p class="text-sm text-primary font-bold mt-0.5">₹ ${p.price || '0'}</p>
                     </div>
@@ -1072,6 +1090,7 @@
                             ${displayTitle}
                             ${w.pinned ? '<span class="material-symbols-outlined text-[14px] text-primary">push_pin</span>' : ''}
                         </h4>
+                            <div class="mt-1 text-xs font-bold bg-[#E8F5E9] text-[#10B981] inline-flex items-center gap-1 px-2 py-0.5 rounded w-fit"><span class="material-symbols-outlined text-[12px]">my_location</span>Service Area: 416602 (Kankavli)</div>
                         <p class="text-xs text-[#94a3b8] truncate">${displayDesc}</p>
                     </div>
                 </div>
